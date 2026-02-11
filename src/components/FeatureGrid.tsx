@@ -3,10 +3,7 @@
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { useRef, useState, useEffect, useId } from "react";
-import {
-  DotLottieCommonPlayer,
-  DotLottiePlayer,
-} from "@dotlottie/react-player";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 
 // Define the icon type.
 type IconType = React.ElementType | React.FunctionComponent<React.SVGProps<SVGSVGElement>> | string;
@@ -214,7 +211,7 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({
 };
 
 const FeatureCard: React.FC<{ feature: FeatureItem }> = ({ feature }) => {
-  const dotLottieRef = useRef<DotLottieCommonPlayer>(null);
+  const dotLottieRef = useRef<any>(null);
   const isLottie = typeof feature.icon === 'string';
 
   const handleHover = () => {
@@ -240,8 +237,8 @@ const FeatureCard: React.FC<{ feature: FeatureItem }> = ({ feature }) => {
           <div className="flex-shrink-0">
             <div className="inline-flex justify-center items-center w-12 h-12 border border-white/15 rounded-lg bg-neutral-800/50">
               {isLottie ? (
-                <DotLottiePlayer
-                  ref={dotLottieRef}
+                <DotLottieReact
+                  dotLottieRefCallback={(ref) => { dotLottieRef.current = ref; }}
                   src={feature.icon as string}
                   className="w-5 h-5"
                   autoplay

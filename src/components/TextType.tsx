@@ -19,6 +19,7 @@ interface TextTypeProps {
   loop?: boolean;
   textColors?: string[];
   variableSpeed?: { min: number; max: number };
+  // eslint-disable-next-line no-unused-vars
   onSentenceComplete?: (sentence: string, index: number) => void;
   startOnVisible?: boolean;
   reverseMode?: boolean;

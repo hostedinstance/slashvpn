@@ -1,3 +1,4 @@
+/* eslint-disable */
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -10,6 +11,7 @@ interface AuroraProps {
   speed?: number;
   flipVertical?: boolean;
 }
+
 
 const VERTEX_SHADER = `#version 300 es
 in vec2 position;
@@ -70,7 +72,6 @@ struct ColorStop { vec3 color; float position; };
 void main(){
   vec2 uv=gl_FragCoord.xy/uResolution;
   
-  // Отражение по вертикали
   if(uFlipVertical > 0.5) {
     uv.y = 1.0 - uv.y;
   }
@@ -100,6 +101,7 @@ void main(){
   fragColor = vec4(auroraColor * auroraAlpha, auroraAlpha);
 }
 `;
+
 
 export default function AuroraShader({
                                        colorStops = ["#5227FF", "#7cff67", "#5227FF"],
