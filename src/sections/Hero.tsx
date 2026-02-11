@@ -59,7 +59,7 @@ export const Hero = () => {
           </h1>
 
           <p className="font-inter-tight text-base md:text-xl text-white/70 mt-5 text-center max-w-xl mx-auto px-4">
-            Твой надежный доступ к любым сайтам — быстро, просто, надежно.
+            Твой доступ к любым сайтам — быстро, просто, надежно.
           </p>
 
           <div className="flex justify-center mt-5">
