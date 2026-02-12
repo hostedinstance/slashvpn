@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useMemo } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
@@ -277,11 +277,9 @@ const DEFAULT_FOOTER_LINK: FooterLinkConfig = {
  * Определяет, является ли строка emoji или кодом страны
  */
 function isEmoji(str: string): boolean {
-  // Простая проверка: если строка короче 4 символов и содержит только буквы - это код страны
   if (str.length > 3) {
     return true;
   }
-  // Проверка на наличие букв (код страны)
   return !/^[a-zA-Z]{2,3}$/.test(str);
 }
 
@@ -295,16 +293,17 @@ function getCircleFlagUrl(countryCode: string): string {
 /**
  * Компонент для отображения флага
  */
-function FlagDisplay({ country, size, dropShadow }: {
+const FlagDisplay = React.memo(({ country, size, dropShadow }: {
   country: Country;
   size: string;
   dropShadow?: string;
-}) {
+}) => {
   const shouldUseCircleFlags = country.useCircleFlags ?? !isEmoji(country.flag);
 
   if (shouldUseCircleFlags) {
     return (
       <div
+        className="flag-container"
         style={{
           width: size,
           height: size,
@@ -317,7 +316,7 @@ function FlagDisplay({ country, size, dropShadow }: {
           alt={`${country.name} flag`}
           fill
           style={{ objectFit: "contain" }}
-          unoptimized // Для внешних SVG
+          unoptimized
         />
       </div>
     );
@@ -325,6 +324,7 @@ function FlagDisplay({ country, size, dropShadow }: {
 
   return (
     <span
+      className="flag-emoji"
       style={{
         fontSize: size,
         filter: dropShadow,
@@ -333,24 +333,27 @@ function FlagDisplay({ country, size, dropShadow }: {
       {country.flag}
     </span>
   );
-}
+});
+
+FlagDisplay.displayName = "FlagDisplay";
 
 /**
  * CSS Link компонент с анимациями
  */
-function CSSLink({
-                   variant = "underline-slide",
-                   className,
-                   children,
-                   href,
-                   ...props
-                 }: {
+const CSSLink = React.memo(({
+                              variant = "underline-slide",
+                              className,
+                              children,
+                              href,
+                              style,
+                              ...props
+                            }: {
   variant?: CSSLinkVariant;
   className?: string;
   children: React.ReactNode;
   href?: string;
   style?: React.CSSProperties;
-}) {
+}) => {
   return (
     <a
       className={cn(
@@ -360,6 +363,7 @@ function CSSLink({
         className
       )}
       href={href}
+      style={style}
       {...props}
     >
       {children}
@@ -380,7 +384,133 @@ function CSSLink({
       </svg>
     </a>
   );
-}
+});
+
+CSSLink.displayName = "CSSLink";
+
+/**
+ * Активная карточка страны
+ */
+const ActiveCountryCard = React.memo(({
+                                        country,
+                                        activeCard,
+                                        index
+                                      }: {
+  country: Country;
+  activeCard: ActiveCardStyle;
+  index: number;
+}) => {
+  const cardStyle = useMemo(() => ({
+    background: activeCard.background,
+    border: `1px solid ${activeCard.borderColor}`,
+    borderRadius: activeCard.borderRadius,
+    minWidth: `${activeCard.minWidth}px`,
+    padding: activeCard.padding,
+    boxShadow: activeCard.boxShadow,
+  }), [activeCard]);
+
+  const indicatorStyle = useMemo(() => ({
+    width: activeCard.indicatorSize,
+    height: activeCard.indicatorSize,
+    backgroundColor: activeCard.statusColor,
+  }), [activeCard.indicatorSize, activeCard.statusColor]);
+
+  return (
+    <div
+      key={`active-${index}`}
+      className="flex items-center gap-4 backdrop-blur-sm"
+      style={cardStyle}
+    >
+      <FlagDisplay
+        country={country}
+        size={activeCard.flagSize}
+        dropShadow={activeCard.flagDropShadow}
+      />
+      <div>
+        <p
+          className={`tracking-tight text-white ${activeCard.nameFont}`}
+          style={{ fontSize: activeCard.nameTextSize }}
+        >
+          {country.name}
+        </p>
+        <p
+          className={`flex items-center gap-1 leading-relaxed ${activeCard.statusFont}`}
+          style={{
+            color: activeCard.statusColor,
+            fontSize: activeCard.statusTextSize,
+          }}
+        >
+          <span
+            className="rounded-full animate-pulse"
+            style={indicatorStyle}
+          />
+          Активна
+        </p>
+      </div>
+    </div>
+  );
+});
+
+ActiveCountryCard.displayName = "ActiveCountryCard";
+
+/**
+ * Планируемая карточка страны
+ */
+const UpcomingCountryCard = React.memo(({
+                                          country,
+                                          upcomingCard,
+                                          index
+                                        }: {
+  country: Country;
+  upcomingCard: UpcomingCardStyle;
+  index: number;
+}) => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const cardStyle = useMemo(() => ({
+    background: upcomingCard.background,
+    border: `${upcomingCard.borderWidth}px ${upcomingCard.borderStyle} ${upcomingCard.borderColor}`,
+    borderRadius: upcomingCard.borderRadius,
+    minWidth: `${upcomingCard.minWidth}px`,
+    padding: upcomingCard.padding,
+    opacity: isHovered ? upcomingCard.hoverOpacity : upcomingCard.opacity,
+    filter: isHovered ? "grayscale(0)" : upcomingCard.grayscale ? "grayscale(1)" : "none",
+  }), [upcomingCard, isHovered]);
+
+  return (
+    <div
+      key={`upcoming-${index}`}
+      className="flex items-center gap-4 backdrop-blur-sm transition-all duration-300"
+      style={cardStyle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <FlagDisplay
+        country={country}
+        size={upcomingCard.flagSize}
+      />
+      <div>
+        <p
+          className={`font-semibold tracking-tight text-white ${upcomingCard.nameFont}`}
+          style={{ fontSize: upcomingCard.nameTextSize }}
+        >
+          {country.name}
+        </p>
+        <p
+          className={`leading-relaxed ${upcomingCard.statusFont}`}
+          style={{
+            color: upcomingCard.statusColor,
+            fontSize: upcomingCard.statusTextSize,
+          }}
+        >
+          Скоро...
+        </p>
+      </div>
+    </div>
+  );
+});
+
+UpcomingCountryCard.displayName = "UpcomingCountryCard";
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
@@ -396,63 +526,94 @@ export function CountrySelector({
                                   footerLinkConfig,
                                 }: CountrySelectorProps) {
   // Merge configs with defaults
-  const activeRow = { ...DEFAULT_ACTIVE_ROW, ...activeRowConfig };
-  const upcomingRow = { ...DEFAULT_UPCOMING_ROW, ...upcomingRowConfig };
-  const activeCard = { ...DEFAULT_ACTIVE_CARD, ...activeCardStyle };
-  const upcomingCard = { ...DEFAULT_UPCOMING_CARD, ...upcomingCardStyle };
-  const header = { ...DEFAULT_HEADER, ...headerConfig };
-  const section = { ...DEFAULT_SECTION, ...sectionConfig };
-  const footerLink = { ...DEFAULT_FOOTER_LINK, ...footerLinkConfig };
+  const activeRow = useMemo(() => ({ ...DEFAULT_ACTIVE_ROW, ...activeRowConfig }), [activeRowConfig]);
+  const upcomingRow = useMemo(() => ({ ...DEFAULT_UPCOMING_ROW, ...upcomingRowConfig }), [upcomingRowConfig]);
+  const activeCard = useMemo(() => ({ ...DEFAULT_ACTIVE_CARD, ...activeCardStyle }), [activeCardStyle]);
+  const upcomingCard = useMemo(() => ({ ...DEFAULT_UPCOMING_CARD, ...upcomingCardStyle }), [upcomingCardStyle]);
+  const header = useMemo(() => ({ ...DEFAULT_HEADER, ...headerConfig }), [headerConfig]);
+  const section = useMemo(() => ({ ...DEFAULT_SECTION, ...sectionConfig }), [sectionConfig]);
+  const footerLink = useMemo(() => ({ ...DEFAULT_FOOTER_LINK, ...footerLinkConfig }), [footerLinkConfig]);
 
-  // Duplicate arrays for seamless loop
-  const activeCountriesDuplicated = [
+  // Duplicate arrays for seamless loop (уменьшено с 3 до 2 копий для оптимизации)
+  const activeCountriesDuplicated = useMemo(() => [
     ...activeCountries,
     ...activeCountries,
-    ...activeCountries,
-  ];
-  const upcomingCountriesDuplicated = [
+  ], [activeCountries]);
+
+  const upcomingCountriesDuplicated = useMemo(() => [
     ...upcomingCountries,
     ...upcomingCountries,
-    ...upcomingCountries,
-  ];
+  ], [upcomingCountries]);
 
   // Animation configs
-  const activeAnimation = {
-    x: activeRow.direction === "left-to-right" ? [0, "-33.33%"] : ["-33.33%", 0],
-  };
-  const upcomingAnimation = {
-    x: upcomingRow.direction === "left-to-right" ? [0, "-33.33%"] : ["-33.33%", 0],
-  };
+  const activeAnimation = useMemo(() => ({
+    x: activeRow.direction === "left-to-right" ? [0, "-50%"] : ["-50%", 0],
+  }), [activeRow.direction]);
+
+  const upcomingAnimation = useMemo(() => ({
+    x: upcomingRow.direction === "left-to-right" ? [0, "-50%"] : ["-50%", 0],
+  }), [upcomingRow.direction]);
+
+  const sectionStyle = useMemo(() => ({
+    paddingTop: `${section.paddingYMobile}px`,
+    paddingBottom: `${section.paddingYMobile}px`,
+  }), [section.paddingYMobile]);
+
+  const headerContainerStyle = useMemo(() => ({
+    marginBottom: `${header.marginBottom}px`
+  }), [header.marginBottom]);
+
+  const headerTitleStyle = useMemo(() => ({
+    fontSize: header.titleSizeMobile,
+    color: header.titleColor,
+  }), [header.titleSizeMobile, header.titleColor]);
+
+  const headerSubtitleStyle = useMemo(() => ({
+    color: header.subtitleColor,
+    fontSize: header.subtitleSize,
+    maxWidth: header.subtitleMaxWidth,
+  }), [header.subtitleColor, header.subtitleSize, header.subtitleMaxWidth]);
+
+  const rowMaskStyle = useMemo(() => ({
+    maskImage: section.maskGradient,
+    WebkitMaskImage: section.maskGradient,
+  }), [section.maskGradient]);
+
+  const activeRowStyle = useMemo(() => ({
+    ...rowMaskStyle,
+    paddingTop: `${activeRow.paddingY}px`,
+    paddingBottom: `${activeRow.paddingY}px`,
+  }), [rowMaskStyle, activeRow.paddingY]);
+
+  const upcomingRowStyle = useMemo(() => ({
+    ...rowMaskStyle,
+    paddingTop: `${upcomingRow.paddingY}px`,
+    paddingBottom: `${upcomingRow.paddingY}px`,
+  }), [rowMaskStyle, upcomingRow.paddingY]);
+
+  const footerStyle = useMemo(() => ({
+    marginTop: `${footerLink.marginTop}px`
+  }), [footerLink.marginTop]);
 
   return (
     <section
       className="relative overflow-hidden"
-      style={{
-        paddingTop: `${section.paddingYMobile}px`,
-        paddingBottom: `${section.paddingYMobile}px`,
-      }}
+      style={sectionStyle}
     >
       {/* Header */}
       <div
         className="container mx-auto px-6"
-        style={{ marginBottom: `${header.marginBottom}px` }}
+        style={headerContainerStyle}
       >
         <h2
-          className={` text-center mb-4 ${header.titleFont}`}
-          style={{
-            fontSize: header.titleSizeMobile,
-            color: header.titleColor,
-          }}
+          className={`text-center mb-4 ${header.titleFont}`}
+          style={headerTitleStyle}
         >
           {header.title}
         </h2>
         <p
           className={`text-center mx-auto leading-relaxed ${header.subtitleFont}`}
-          style={{
-            color: header.subtitleColor,
-            fontSize: header.subtitleSize,
-            maxWidth: header.subtitleMaxWidth,
-          }}
+          style={headerSubtitleStyle}
         >
           {header.subtitle}
         </p>
@@ -461,16 +622,14 @@ export function CountrySelector({
       {/* Active Countries Row */}
       <div
         className="relative mb-8"
-        style={{
-          maskImage: section.maskGradient,
-          WebkitMaskImage: section.maskGradient,
-          paddingTop: `${activeRow.paddingY}px`,
-          paddingBottom: `${activeRow.paddingY}px`,
-        }}
+        style={activeRowStyle}
       >
         <motion.div
           className="flex w-fit"
-          style={{ gap: `${activeRow.gap}px` }}
+          style={{
+            gap: `${activeRow.gap}px`,
+            willChange: 'transform'
+          }}
           animate={activeAnimation}
           transition={{
             duration: activeRow.duration,
@@ -479,59 +638,12 @@ export function CountrySelector({
           }}
         >
           {activeCountriesDuplicated.map((country, index) => (
-            <div
+            <ActiveCountryCard
               key={`active-${index}`}
-              className="group flex items-center gap-4 backdrop-blur-sm transition-all duration-300 hover:z-10"
-              style={{
-                background: activeCard.background,
-                border: `1px solid ${activeCard.borderColor}`,
-                borderRadius: activeCard.borderRadius,
-                minWidth: `${activeCard.minWidth}px`,
-                padding: activeCard.padding,
-                boxShadow: activeCard.boxShadow,
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = `scale(${activeCard.hoverScale})`;
-                e.currentTarget.style.borderColor = activeCard.borderColorHover;
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.borderColor = activeCard.borderColor;
-              }}
-            >
-              <FlagDisplay
-                country={country}
-                size={activeCard.flagSize}
-                dropShadow={activeCard.flagDropShadow}
-              />
-              <div>
-                <p
-                  className={`tracking-tight text-white ${activeCard.nameFont}`}
-                  style={{
-                    fontSize: activeCard.nameTextSize,
-                  }}
-                >
-                  {country.name}
-                </p>
-                <p
-                  className={`flex items-center gap-1 leading-relaxed ${activeCard.statusFont}`}
-                  style={{
-                    color: activeCard.statusColor,
-                    fontSize: activeCard.statusTextSize,
-                  }}
-                >
-                  <span
-                    className="rounded-full animate-pulse"
-                    style={{
-                      width: activeCard.indicatorSize,
-                      height: activeCard.indicatorSize,
-                      backgroundColor: activeCard.statusColor,
-                    }}
-                  />
-                  Активна
-                </p>
-              </div>
-            </div>
+              country={country}
+              activeCard={activeCard}
+              index={index}
+            />
           ))}
         </motion.div>
       </div>
@@ -539,16 +651,14 @@ export function CountrySelector({
       {/* Upcoming Countries Row */}
       <div
         className="relative"
-        style={{
-          maskImage: section.maskGradient,
-          WebkitMaskImage: section.maskGradient,
-          paddingTop: `${upcomingRow.paddingY}px`,
-          paddingBottom: `${upcomingRow.paddingY}px`,
-        }}
+        style={upcomingRowStyle}
       >
         <motion.div
           className="flex w-fit"
-          style={{ gap: `${upcomingRow.gap}px` }}
+          style={{
+            gap: `${upcomingRow.gap}px`,
+            willChange: 'transform'
+          }}
           animate={upcomingAnimation}
           transition={{
             duration: upcomingRow.duration,
@@ -557,53 +667,12 @@ export function CountrySelector({
           }}
         >
           {upcomingCountriesDuplicated.map((country, index) => (
-            <div
+            <UpcomingCountryCard
               key={`upcoming-${index}`}
-              className="group flex items-center gap-4 backdrop-blur-sm transition-all duration-300"
-              style={{
-                background: upcomingCard.background,
-                border: `${upcomingCard.borderWidth}px ${upcomingCard.borderStyle} ${upcomingCard.borderColor}`,
-                borderRadius: upcomingCard.borderRadius,
-                minWidth: `${upcomingCard.minWidth}px`,
-                padding: upcomingCard.padding,
-                opacity: upcomingCard.opacity,
-                filter: upcomingCard.grayscale ? "grayscale(1)" : "none",
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.opacity = `${upcomingCard.hoverOpacity}`;
-                e.currentTarget.style.filter = "grayscale(0)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.opacity = `${upcomingCard.opacity}`;
-                e.currentTarget.style.filter = upcomingCard.grayscale
-                  ? "grayscale(1)"
-                  : "none";
-              }}
-            >
-              <FlagDisplay
-                country={country}
-                size={upcomingCard.flagSize}
-              />
-              <div>
-                <p
-                  className={`font-semibold tracking-tight text-white ${upcomingCard.nameFont}`}
-                  style={{
-                    fontSize: upcomingCard.nameTextSize,
-                  }}
-                >
-                  {country.name}
-                </p>
-                <p
-                  className={`leading-relaxed ${upcomingCard.statusFont}`}
-                  style={{
-                    color: upcomingCard.statusColor,
-                    fontSize: upcomingCard.statusTextSize,
-                  }}
-                >
-                  Скоро...
-                </p>
-              </div>
-            </div>
+              country={country}
+              upcomingCard={upcomingCard}
+              index={index}
+            />
           ))}
         </motion.div>
       </div>
@@ -612,7 +681,7 @@ export function CountrySelector({
       {footerLinkConfig && (
         <div
           className="container mx-auto px-6 text-center"
-          style={{ marginTop: `${footerLink.marginTop}px` }}
+          style={footerStyle}
         >
           <p className={`${footerLink.font}`}>
             <span
@@ -648,7 +717,7 @@ export function CountrySelector({
                   padding-bottom: ${section.paddingYDesktop}px !important;
               }
           }
-          
+
           /* stylelint-disable selector-class-pattern */
           .css-link {
               position: relative;

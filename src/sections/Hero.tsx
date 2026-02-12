@@ -46,7 +46,7 @@ export const Hero = () => {
           <h1 className="text-center text-6xl md:text-9xl font-medium font-grifter-bold">
             <span className="block text-white">
               <TextType
-                text={["SLASH VPN", "://"]}
+                text={["SLASH VPN", "//slashvpn"]}
                 as="span"
                 typingSpeed={50}
                 showCursor
