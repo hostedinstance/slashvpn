@@ -534,8 +534,9 @@ export function CountrySelector({
   const section = useMemo(() => ({ ...DEFAULT_SECTION, ...sectionConfig }), [sectionConfig]);
   const footerLink = useMemo(() => ({ ...DEFAULT_FOOTER_LINK, ...footerLinkConfig }), [footerLinkConfig]);
 
-  // Duplicate arrays for seamless loop (уменьшено с 3 до 2 копий для оптимизации)
+  // Duplicate arrays for seamless loop
   const activeCountriesDuplicated = useMemo(() => [
+    ...activeCountries,
     ...activeCountries,
     ...activeCountries,
   ], [activeCountries]);
@@ -543,15 +544,16 @@ export function CountrySelector({
   const upcomingCountriesDuplicated = useMemo(() => [
     ...upcomingCountries,
     ...upcomingCountries,
+    ...upcomingCountries,
   ], [upcomingCountries]);
 
   // Animation configs
   const activeAnimation = useMemo(() => ({
-    x: activeRow.direction === "left-to-right" ? [0, "-50%"] : ["-50%", 0],
+    x: activeRow.direction === "left-to-right" ? [0, "-33.33%"] : ["-33.33%", 0],
   }), [activeRow.direction]);
 
   const upcomingAnimation = useMemo(() => ({
-    x: upcomingRow.direction === "left-to-right" ? [0, "-50%"] : ["-50%", 0],
+    x: upcomingRow.direction === "left-to-right" ? [0, "-33.33%"] : ["-33.33%", 0],
   }), [upcomingRow.direction]);
 
   const sectionStyle = useMemo(() => ({

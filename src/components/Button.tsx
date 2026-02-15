@@ -8,12 +8,18 @@ import { twMerge } from "tailwind-merge";
 interface ButtonProps {
   classname?: string;
   font?: string;
+  href?: string;
+  target?: string;
+  rel?: string;
 }
 
 export const Button: FC<PropsWithChildren<ButtonProps>> = ({
                                                              children,
                                                              classname,
                                                              font = "font-semibold font-wix-madefor tracking-tight",
+                                                             href = "#",
+                                                             target,
+                                                             rel,
                                                            }) => {
   const xTo = useRef<gsap.QuickToFunc | null>(null);
   const yTo = useRef<gsap.QuickToFunc | null>(null);
@@ -51,25 +57,25 @@ export const Button: FC<PropsWithChildren<ButtonProps>> = ({
   };
 
   return (
-
-    <a ref={buttonRef}
-  href="https://t.me/buyslashvpn_bot"
-  target="_blank"
-  rel="noopener noreferrer"
-  className={twMerge(
-    "relative inline-block py-3 px-4 text-m font-medium rounded-lg border-2 border-white/50 text-white overflow-hidden z-0 transition-colors duration-300 hover:text-black hover:border-white/0",
-    font,
-    classname
-)}
-  onMouseEnter={handleMouseEnter}
-  onMouseLeave={handleMouseLeave}
-  onMouseMove={handleMouseMove}
+    <a
+      ref={buttonRef}
+      href={href}
+      target={target}
+      rel={rel}
+      className={twMerge(
+        "relative inline-block py-3 px-4 text-m font-medium rounded-lg border-2 border-white/50 text-white overflow-hidden z-0 transition-colors duration-500 hover:text-black hover:border-white/0",
+        font,
+        classname
+      )}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
     >
-    <div
-  ref={blobRef}
-  className="absolute w-[200px] h-[150px] bg-white left-0 top-0 -z-10 pointer-events-none rounded-[50%]"
-    />
-    <span className="relative z-10">{children}</span>
-</a>
-);
+      <div
+        ref={blobRef}
+        className="absolute w-[400px] h-[300px] bg-white left-0 top-0 -z-10 pointer-events-none rounded-[50%]"
+      />
+      <span className="relative z-10">{children}</span>
+    </a>
+  );
 };

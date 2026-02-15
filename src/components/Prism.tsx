@@ -21,6 +21,8 @@ type PrismProps = {
   suspendWhenOffscreen?: boolean;
   timeScale?: number;
   color?: string;
+  gradient?: string[];
+  gradientDirection?: 'vertical' | 'horizontal' | 'radial';
 };
 
 const Prism: React.FC<PrismProps> = ({
@@ -39,11 +41,12 @@ const Prism: React.FC<PrismProps> = ({
                                        bloom = 1,
                                        suspendWhenOffscreen = false,
                                        timeScale = 0.5,
-                                       color
+                                       color,
+                                       gradient,
+                                       gradientDirection = 'vertical'
                                      }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Convert hex color to RGB
   const getColorRGB = (hexColor: string): [number, number, number] => {
     const hex = hexColor.replace('#', '');
     const r = parseInt(hex.substring(0, 2), 16) / 255;
@@ -53,6 +56,7 @@ const Prism: React.FC<PrismProps> = ({
   };
 
   const colorRGB = color ? getColorRGB(color) : null;
+  const gradientColors = gradient ? gradient.map(getColorRGB) : null;
 
   useEffect(() => {
     const container = containerRef.current;
@@ -131,6 +135,11 @@ const Prism: React.FC<PrismProps> = ({
       uniform float uPxScale;
       uniform float uTimeScale;
       uniform vec3 uColor;
+      
+      uniform int uUseGradient;
+      uniform vec3 uGradientColors[4];
+      uniform int uGradientStops;
+      uniform int uGradientDirection;
 
       vec4 tanh4(vec4 x){
         vec4 e2x = exp(2.0*x);
@@ -171,6 +180,41 @@ const Prism: React.FC<PrismProps> = ({
           -0.497,  0.296,  0.201
         );
         return W + U * c + V * s;
+      }
+      
+      vec3 getGradientColor(vec2 uv){
+        float t = 0.0;
+        
+        if(uGradientDirection == 0){ // vertical
+          t = uv.y;
+        } else if(uGradientDirection == 1){ // horizontal
+          t = uv.x;
+        } else { // radial
+          vec2 center = uv - vec2(0.5);
+          t = length(center) * 1.414;
+        }
+        
+        t = clamp(t, 0.0, 1.0);
+        
+        if(uGradientStops == 2){
+          return mix(uGradientColors[0], uGradientColors[1], t);
+        } else if(uGradientStops == 3){
+          if(t < 0.5){
+            return mix(uGradientColors[0], uGradientColors[1], t * 2.0);
+          } else {
+            return mix(uGradientColors[1], uGradientColors[2], (t - 0.5) * 2.0);
+          }
+        } else if(uGradientStops == 4){
+          if(t < 0.333){
+            return mix(uGradientColors[0], uGradientColors[1], t * 3.0);
+          } else if(t < 0.666){
+            return mix(uGradientColors[1], uGradientColors[2], (t - 0.333) * 3.0);
+          } else {
+            return mix(uGradientColors[2], uGradientColors[3], (t - 0.666) * 3.0);
+          }
+        }
+        
+        return uGradientColors[0];
       }
 
       void main(){
@@ -220,8 +264,14 @@ const Prism: React.FC<PrismProps> = ({
           col = clamp(hueRotation(uHueShift) * col, 0.0, 1.0);
         }
 
-        // Apply color tint if provided
-        if(length(uColor) > 0.0){
+        // Apply gradient as color multiplier
+        if(uUseGradient == 1){
+          vec2 uv = gl_FragCoord.xy / iResolution.xy;
+          vec3 gradientColor = getGradientColor(uv);
+          col = col * gradientColor * 2.0; // Multiply by 2 to boost brightness
+        }
+        // Apply solid color tint if provided and no gradient
+        else if(length(uColor) > 0.0){
           col *= uColor;
         }
 
@@ -232,6 +282,21 @@ const Prism: React.FC<PrismProps> = ({
     const geometry = new Triangle(gl);
     const iResBuf = new Float32Array(2);
     const offsetPxBuf = new Float32Array(2);
+
+    const gradientColorsFlat = new Float32Array(12);
+    if (gradientColors && gradientColors.length > 0) {
+      for (let i = 0; i < Math.min(4, gradientColors.length); i++) {
+        gradientColorsFlat[i * 3] = gradientColors[i][0];
+        gradientColorsFlat[i * 3 + 1] = gradientColors[i][1];
+        gradientColorsFlat[i * 3 + 2] = gradientColors[i][2];
+      }
+    }
+
+    const gradientDirectionMap = {
+      'vertical': 0,
+      'horizontal': 1,
+      'radial': 2
+    };
 
     const program = new Program(gl, {
       vertex,
@@ -259,7 +324,11 @@ const Prism: React.FC<PrismProps> = ({
           value: 1 / ((gl.drawingBufferHeight || 1) * 0.1 * SCALE)
         },
         uTimeScale: { value: TS },
-        uColor: { value: colorRGB || [1.0, 1.0, 1.0] }
+        uColor: { value: colorRGB || [1.0, 1.0, 1.0] },
+        uUseGradient: { value: gradientColors ? 1 : 0 },
+        uGradientColors: { value: gradientColorsFlat },
+        uGradientStops: { value: gradientColors ? gradientColors.length : 0 },
+        uGradientDirection: { value: gradientDirectionMap[gradientDirection] }
       }
     });
     const mesh = new Mesh(gl, { geometry, program });
@@ -493,7 +562,9 @@ const Prism: React.FC<PrismProps> = ({
     inertia,
     bloom,
     suspendWhenOffscreen,
-    colorRGB
+    colorRGB,
+    gradientColors,
+    gradientDirection
   ]);
 
   return <div className="w-full h-full relative" ref={containerRef} />;

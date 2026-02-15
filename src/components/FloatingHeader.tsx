@@ -1,6 +1,7 @@
 'use client';
 
 import Image, { StaticImageData } from 'next/image';
+import { Button } from '@/components/Button';
 
 export interface NavLink {
   label: string;
@@ -31,10 +32,13 @@ export function FloatingHeader({
                                  logoAlt  = 'Logo',
                                  links    = DEFAULT_LINKS,
                                  ctaLabel = 'Купить',
-                                 ctaHref  = 'https://t.me/buyslashvpn_bot',
+                                 ctaHref  = '/register',
                                }: FloatingHeaderProps) {
+  // Проверяем, является ли ссылка внешней
+  const isExternalLink = ctaHref.startsWith('http://') || ctaHref.startsWith('https://');
+
   return (
-    <header className="sticky top-4 z-50 mx-auto w-full max-w-4xl px-4">
+    <header className="sticky top-6 z-50 mx-auto w-full max-w-4xl px-4">
       <nav className="flex h-16 items-center justify-between rounded-xl border border-white/25 bg-black/20 px-3 backdrop-blur-md">
 
         {/* Логотип */}
@@ -59,7 +63,7 @@ export function FloatingHeader({
                 href={link.href}
                 className="
                   rounded-lg px-3 py-1.5
-                  text-sm text-white/70
+                  text-[16px] text-white/70
                   transition-all duration-200
                   hover:bg-white/15 hover:text-white
                 "
@@ -70,22 +74,15 @@ export function FloatingHeader({
           ))}
         </ul>
 
-        {/* CTA → Telegram */}
-        <a
+        {/* CTA - внутренняя или внешняя ссылка */}
+        <Button
           href={ctaHref}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="
-            rounded-lg bg-white px-6 py-2
-            text-sm font-semibold text-black
-            transition-all duration-200
-            hover:bg-white/85 active:scale-95
-            font-wix-madefor
-            tracking-tight
-          "
+          target={isExternalLink ? "_blank" : undefined}
+          rel={isExternalLink ? "noopener noreferrer" : undefined}
+          classname="text-ml py-2 px-6"
         >
           {ctaLabel}
-        </a>
+        </Button>
 
       </nav>
     </header>

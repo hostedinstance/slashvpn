@@ -18,19 +18,19 @@ export const Hero = () => {
   return (
     <section className="min-h-screen md:h-[800px] flex items-center overflow-hidden relative py-20">
       {/* Prism Background */}
-      <div className="absolute inset-0 z-0 [mask-image:linear-gradient(to_bottom,transparent,black_10%,black_90%,transparent)]">
+      <div className="absolute inset-0 z-0 ">
         <Prism
-          color="#6f00ff"
-          height={2.7}
-          baseWidth={4.4}
+          color={"#4800ff"}
+          height={2.5}
+          baseWidth={4}
           animationType="rotate"
-          glow={0.6}
+          glow={1}
           noise={0}
-          transparent
-          scale={isMobile ? 1 : 3.7} // 2.5 для мобильных, 3.7 для ПК
+          scale={isMobile ? 1 : 3.7}
           hoverStrength={0.5}
-          bloom={1}
-          timeScale={0.6}
+          bloom={1.5}
+          timeScale={0.3}
+          colorFrequency={2}
         />
       </div>
 
@@ -59,7 +59,7 @@ export const Hero = () => {
           </h1>
 
           <p className="font-inter-tight text-base md:text-xl text-white/70 mt-5 text-center max-w-xl mx-auto px-4">
-            Твой надежный доступ к любым сайтам — быстро, просто, надежно.
+            Твой надежный доступ к любым сайтам — быстро, просто и надежно.
           </p>
 
           <div className="flex justify-center mt-5">

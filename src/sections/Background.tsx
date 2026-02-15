@@ -4,9 +4,9 @@ export const Aurora = () => {
   return (
     <AuroraShader
       flipVertical={true}
-      colorStops={["#3700FF", "#000", "#3700FF"]}
+      colorStops={["#4800ff", "#000", "#4800ff"]}
       amplitude={0.6}
-      blend={0.5}
+      blend={0.3}
       speed={2}
     />
   );

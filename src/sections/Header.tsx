@@ -14,7 +14,7 @@ export function Header() {
       logoAlt="SlashVPN"
       links={NAV_LINKS}
       ctaLabel="Купить"
-      ctaHref="https://t.me/buyslashvpn_bot"
+      ctaHref="/register"
     />
   );
 }
