@@ -2,6 +2,8 @@
 
 import Image, { StaticImageData } from 'next/image';
 import { Button } from '@/components/Button';
+import { useNavigate } from '@/components/NavigationTransition';
+import { header as headerConfig, site } from '@/config/site.config';
 
 export interface NavLink {
   label: string;
@@ -9,40 +11,47 @@ export interface NavLink {
 }
 
 export interface FloatingHeaderProps {
-  /** Импортированный логотип (import logo from '@/assets/logo.png') или URL-строка */
   logo?: StaticImageData | string;
-  /** Alt текст логотипа */
   logoAlt?: string;
-  /** Ссылки навигации */
   links?: NavLink[];
-  /** Текст кнопки */
   ctaLabel?: string;
-  /** Ссылка кнопки */
   ctaHref?: string;
+  authMode?: boolean;
 }
 
-const DEFAULT_LINKS: NavLink[] = [
-  { label: 'Возможности', href: '#features' },
-  { label: 'Локации',     href: '#locations' },
-  { label: 'FAQ',         href: '#faq'       },
-];
-
 export function FloatingHeader({
-                                 logo,
-                                 logoAlt  = 'Logo',
-                                 links    = DEFAULT_LINKS,
-                                 ctaLabel = 'Купить',
-                                 ctaHref  = '/register',
-                               }: FloatingHeaderProps) {
-  // Проверяем, является ли ссылка внешней
-  const isExternalLink = ctaHref.startsWith('http://') || ctaHref.startsWith('https://');
+  logo,
+  logoAlt  = headerConfig.logoAlt,
+  links,
+  ctaLabel,
+  ctaHref,
+  authMode = false,
+}: FloatingHeaderProps) {
+  const { navigate } = useNavigate();
+
+  const resolvedLinks    = authMode ? [] : (links ?? [...site.navLinks]);
+  const resolvedCtaLabel = ctaLabel ?? (authMode ? 'Личный кабинет' : site.ctaLabel);
+  const resolvedCtaHref  = ctaHref  ?? (authMode ? '/dashboard'     : site.ctaHref);
+
+  const isExternal = resolvedCtaHref.startsWith('http://') || resolvedCtaHref.startsWith('https://');
+  const isAnchor   = resolvedCtaHref.startsWith('#');
 
   return (
-    <header className="sticky top-6 z-50 mx-auto w-full max-w-4xl px-4">
-      <nav className="flex h-16 items-center justify-between rounded-xl border border-white/25 bg-black/20 px-3 backdrop-blur-md">
+    // Оригинальный отступ сверху top-6 (24px) + горизонтальный px-4.
+    // py-* здесь не используем — высота определяется h-16 на <nav> внутри.
+    // Управление отступом сверху: headerConfig.stickyOffset в site.config.ts
+    <header className={`sticky ${headerConfig.stickyOffset} z-50 mx-auto w-full max-w-4xl ${headerConfig.paddingX}`}>
+      {/*
+        h-16 — высота пилюли хедера (оригинальный размер с главной страницы).
+        Меняй headerConfig.navHeight в site.config.ts.
+      */}
+      <nav className={`flex ${headerConfig.navHeight} items-center justify-between rounded-xl border border-white/25 bg-black/20 ${headerConfig.navPaddingX} backdrop-blur-md`}>
 
         {/* Логотип */}
-        <a href="/" className="flex h-14 items-center py-2">
+        <button
+          onClick={() => navigate('/')}
+          className={`flex ${headerConfig.logoHeight} items-center py-2 cursor-pointer`}
+        >
           {logo ? (
             <Image
               src={logo}
@@ -53,35 +62,37 @@ export function FloatingHeader({
           ) : (
             <span className="font-mono text-base font-bold text-white">{logoAlt}</span>
           )}
-        </a>
+        </button>
 
         {/* Навигация */}
-        <ul className="hidden items-center gap-1 md:flex font-inter-tight">
-          {links.map((link) => (
-            <li key={link.label}>
-              <a
-                href={link.href}
-                className="
-                  rounded-lg px-3 py-1.5
-                  text-[16px] text-white/70
-                  transition-all duration-200
-                  hover:bg-white/15 hover:text-white
-                "
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        {resolvedLinks.length > 0 && (
+          <ul className="hidden items-center gap-1 md:flex font-inter-tight">
+            {resolvedLinks.map((link) => (
+              <li key={link.label}>
+                <a
+                  href={link.href}
+                  className="rounded-lg px-3 py-1.5 text-[16px] text-white/70 transition-all duration-200 hover:bg-white/15 hover:text-white"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
 
-        {/* CTA - внутренняя или внешняя ссылка */}
+        {/* CTA */}
         <Button
-          href={ctaHref}
-          target={isExternalLink ? "_blank" : undefined}
-          rel={isExternalLink ? "noopener noreferrer" : undefined}
+          href={isExternal || isAnchor ? resolvedCtaHref : '#'}
+          onClick={
+            !isExternal && !isAnchor
+              ? (e: React.MouseEvent) => { e.preventDefault(); navigate(resolvedCtaHref); }
+              : undefined
+          }
+          target={isExternal ? '_blank' : undefined}
+          rel={isExternal ? 'noopener noreferrer' : undefined}
           classname="text-ml py-2 px-6"
         >
-          {ctaLabel}
+          {resolvedCtaLabel}
         </Button>
 
       </nav>

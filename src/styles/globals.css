@@ -2,13 +2,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400..800&display=swap');
 
 @font-face {
-  font-family: 'GRIFTER';
-  src: url('/fonts/grifter-bold.woff2') format('woff2'),
-  url('/fonts/MyFont-Regular.ttf') format('truetype');
+  font-family: 'Grifter';
+  src: url('/fonts/grifter-bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
+
+:root {
+  --font-grifter-bold: 'Grifter', sans-serif;
+}
+
+
 
 @tailwind base;
 @tailwind components;
@@ -97,7 +102,5 @@
   }
 }
 
-/* Плавная прокрутка */
-html {
-  scroll-behavior: smooth;
-}
+/* Плавная прокрутка управляется через Lenis (SmoothScroll.tsx).
+   НЕ используем scroll-behavior: smooth — это конфликтует с Lenis и ломает анкор-ссылки. */
