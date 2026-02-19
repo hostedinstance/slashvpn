@@ -1,106 +1,88 @@
-@import url('https://fonts.googleapis.com/css2?family=Zalando+Sans+SemiExpanded:ital,wght@0,200..900;1,200..900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Wix+Madefor+Display:wght@400;500;600;700;800&family=Inter+Tight:wght@300;400;500;600;700&display=swap');
 
 @font-face {
-  font-family: 'Grifter';
+  font-family: 'Grifter Bold';
   src: url('/fonts/grifter-bold.woff2') format('woff2');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
-:root {
-  --font-grifter-bold: 'Grifter', sans-serif;
-}
-
-
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer components {
-  /* Автоматически применяется ко всем компонентам */
-  .components > * {
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+/* ── Navy Design Tokens ──────────────────────────────────────────────────── */
+:root {
+  /* Core navy palette from #00092B */
+  --bg-base:      #00092B;   /* page background */
+  --bg-card:      #010E38;   /* card / panel bg */
+  --bg-raised:    #01144A;   /* elevated / hover card */
+  --bg-overlay:   #021660;   /* high-elevation */
+
+  /* Borders — subtle blue-tinted */
+  --border:       rgba(100, 140, 255, 0.08);
+  --border-hover: rgba(140, 170, 255, 0.18);
+
+  /* Accent — violet works perfectly on navy */
+  --accent:       #6B2EFF;
+  --accent-dim:   #4A1FBE;
+  --accent-glow:  rgba(107, 46, 255, 0.30);
+  --accent-sub:   rgba(107, 46, 255, 0.10);
+
+  /* Text — slightly blue-tinted whites on navy */
+  --text-primary:   rgba(230, 238, 255, 0.96);
+  --text-secondary: rgba(180, 205, 255, 0.55);
+  --text-tertiary:  rgba(140, 175, 255, 0.28);
+
+  --font-display: 'Wix Madefor Display', sans-serif;
+  --font-ui:      'Inter Tight', sans-serif;
+  --font-hero:    'Grifter Bold', sans-serif;
 }
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.6%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.6%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.6%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 9.0%;
-    --accent-foreground: 0 0% 100%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 100%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --primary: 0 0% 9.0%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9.0%;
-    --ring: 0 0% 3.6%;
-    --radius: 0.5rem;
-  }
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .dark {
-    --background: 0 0% 3.6%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.6%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.6%;
-    --popover-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 98%;
-    --accent-foreground: 0 0% 9.0%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 9.0%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9.0%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --ring: 0 0% 83.1%;
-  }
-
-  .theme {
-    --animate-gradient: gradient 8s linear infinite;
-  }
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-@layer base {
-  body {
-    @apply text-foreground;
-  }
-
-  /* Шрифты для элементов */
-  p {
-    font-family: var(--font-inter-tight), sans-serif;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-wix-madefor), sans-serif;
-  }
+body {
+  background-color: var(--bg-base);
+  color:            var(--text-primary);
+  font-family:      var(--font-ui);
+  overflow-x:       hidden;
 }
 
-@theme inline {
-  @keyframes gradient {
-    to {
-      background-position: var(--bg-size, 300%) 0;
-    }
-  }
+/* ── Font utilities ───────────────────────────────────────────────────────── */
+.font-wix-madefor  { font-family: var(--font-display); }
+.font-inter-tight  { font-family: var(--font-ui); }
+.font-grifter-bold { font-family: var(--font-hero); }
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar          { width: 4px; }
+::-webkit-scrollbar-track    { background: var(--bg-base); }
+::-webkit-scrollbar-thumb    { background: rgba(100,140,255,0.30); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(100,160,255,0.55); }
+
+/* ── Selection ─────────────────────────────────────────────────────────────── */
+::selection { background: rgba(1,20,74,0.85); color: rgba(200,215,255,0.96); }
+
+/* ── Focus ──────────────────────────────────────────────────────────────────── */
+:focus-visible { outline: 2px solid rgba(100,160,255,0.55); outline-offset: 3px; border-radius: 4px; }
+
+/* ── Page fade-in — runs once on load, coordinates with PageLoader ─────────── */
+/* main starts invisible; after 0.4s delay it fades in over 0.7s              */
+/* This plays UNDER the PageLoader (z-index 9999) so no flash is visible.     */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0);   }
 }
 
-/* Плавная прокрутка управляется через Lenis (SmoothScroll.tsx).
-   НЕ используем scroll-behavior: smooth — это конфликтует с Lenis и ломает анкор-ссылки. */
+main {
+  animation: pageFadeIn 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.4s both;
+}

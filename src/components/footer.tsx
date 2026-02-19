@@ -1,6 +1,10 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import Image, { StaticImageData } from 'next/image';
+import { fonts } from '@/config/theme.config';
+
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 export interface FooterLink {
@@ -15,36 +19,35 @@ export interface SocialLink {
 }
 
 export interface FooterSectionProps {
-  /** Логотип (импортированный файл или URL) */
   logo?: StaticImageData | string;
-  /** Alt логотипа */
   logoAlt?: string;
-  /** Ширина логотипа в px */
   logoWidth?: number;
-  /** Высота логотипа в px */
   logoHeight?: number;
-  /** Навигационные ссылки */
   links?: FooterLink[];
-  /** Иконки соцсетей */
   socials?: SocialLink[];
-  /** Текст копирайта (без ©) */
   copyright?: string;
+  /** CSS-класс ссылок */
+  linkClassName?: string;
 }
 
 // ─── FooterSection ────────────────────────────────────────────────────────────
 
 export function FooterSection({
-                                logo         = '/assets/logotextgrd.png',
-                                logoAlt      = 'Logo',
-                                logoWidth    = 283,
-                                logoHeight   = 51,
-                                links        = [],
-                                socials      = [],
-                                copyright    = `${new Date().getFullYear()} SLASH SOLUTIONS`,
-                              }: FooterSectionProps) {
+  logo         = '/assets/logotextgrd.png',
+  logoAlt      = 'Logo',
+  logoWidth    = 283,
+  logoHeight   = 51,
+  links        = [],
+  socials      = [],
+  copyright    = `${new Date().getFullYear()} SLASH SOLUTIONS`,
+  linkClassName = `${fonts.body} text-sm text-white/35 hover:text-white/80 transition-colors duration-200`,
+}: FooterSectionProps) {
   return (
-    <footer className="py-16 md:py-32 font-inter-tight select-none">
+    <footer className="py-16 md:py-28 select-none bg-[#07070f]">
       <div className="mx-auto max-w-5xl px-6">
+
+        {/* Divider */}
+        <div className="w-full h-px bg-white/[0.06] mb-12" />
 
         {/* Логотип */}
         <Link href="#" aria-label="go home" className="mx-auto block size-fit">
@@ -53,20 +56,16 @@ export function FooterSection({
             alt={logoAlt}
             width={logoWidth}
             height={logoHeight}
-            className="h-10 w-auto"
+            className="h-9 w-auto opacity-50 hover:opacity-80 transition-opacity duration-300"
           />
         </Link>
 
         {/* Навигация */}
         {links.length > 0 && (
-          <div className="my-8 flex flex-wrap justify-center gap-6 text-sm">
+          <div className="my-8 flex flex-wrap justify-center gap-6">
             {links.map((link, index) => (
-              <Link
-                key={index}
-                href={link.href}
-                className="text-muted-foreground hover:text-white block duration-150"
-              >
-                <span>{link.title}</span>
+              <Link key={index} href={link.href} className={linkClassName}>
+                {link.title}
               </Link>
             ))}
           </div>
@@ -74,7 +73,7 @@ export function FooterSection({
 
         {/* Соцсети */}
         {socials.length > 0 && (
-          <div className="my-8 flex flex-wrap justify-center gap-6 text-sm select-none">
+          <div className="my-8 flex flex-wrap justify-center gap-5">
             {socials.map((social, index) => (
               <Link
                 key={index}
@@ -82,7 +81,7 @@ export function FooterSection({
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={social.label}
-                className="block opacity-60 transition-opacity hover:opacity-100"
+                className="block opacity-35 hover:opacity-75 transition-opacity duration-200"
               >
                 {social.icon}
               </Link>
@@ -90,27 +89,22 @@ export function FooterSection({
           </div>
         )}
 
-        {/* Политика и условия */}
-        <div className="my-4 flex flex-wrap justify-center gap-4 text-sm">
-          <Link
-            href="/privacy"
-            className="text-muted-foreground hover:text-white duration-150"
-          >
-            Политика конфиденциальности
-          </Link>
-          <Link
-            href="/terms"
-            className="text-muted-foreground hover:text-white duration-150"
-          >
-            Условия использования
-          </Link>
+        {/* Политика */}
+        <div className="my-4 flex flex-wrap justify-center gap-5">
+          {[
+            { href: '/privacy', label: 'Политика конфиденциальности' },
+            { href: '/terms',   label: 'Условия использования' },
+          ].map(({ href, label }) => (
+            <Link key={href} href={href} className={linkClassName}>
+              {label}
+            </Link>
+          ))}
         </div>
 
         {/* Копирайт */}
-        <span className="text-muted-foreground block text-center text-sm font-zalando-sans">
+        <p className={`block text-center text-xs mt-6 text-white/25 ${fonts.body}`}>
           © {copyright}
-        </span>
-
+        </p>
       </div>
     </footer>
   );

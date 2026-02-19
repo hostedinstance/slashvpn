@@ -4,6 +4,7 @@ import Image, { StaticImageData } from 'next/image';
 import { Button } from '@/components/Button';
 import { useNavigate } from '@/components/NavigationTransition';
 import { header as headerConfig, site } from '@/config/site.config';
+import { fonts } from '@/config/theme.config';
 
 export interface NavLink {
   label: string;
@@ -17,6 +18,8 @@ export interface FloatingHeaderProps {
   ctaLabel?: string;
   ctaHref?: string;
   authMode?: boolean;
+  /** CSS-класс nav-ссылок. По умолчанию из theme */
+  navLinkClassName?: string;
 }
 
 export function FloatingHeader({
@@ -26,6 +29,7 @@ export function FloatingHeader({
   ctaLabel,
   ctaHref,
   authMode = false,
+  navLinkClassName = `rounded-lg px-3 py-1.5 text-[15px] text-white/55 ${fonts.body} transition-all duration-200 hover:bg-white/10 hover:text-white`,
 }: FloatingHeaderProps) {
   const { navigate } = useNavigate();
 
@@ -37,20 +41,13 @@ export function FloatingHeader({
   const isAnchor   = resolvedCtaHref.startsWith('#');
 
   return (
-    // Оригинальный отступ сверху top-6 (24px) + горизонтальный px-4.
-    // py-* здесь не используем — высота определяется h-16 на <nav> внутри.
-    // Управление отступом сверху: headerConfig.stickyOffset в site.config.ts
     <header className={`sticky ${headerConfig.stickyOffset} z-50 mx-auto w-full max-w-4xl ${headerConfig.paddingX}`}>
-      {/*
-        h-16 — высота пилюли хедера (оригинальный размер с главной страницы).
-        Меняй headerConfig.navHeight в site.config.ts.
-      */}
-      <nav className={`flex ${headerConfig.navHeight} items-center justify-between rounded-xl border border-white/25 bg-black/20 ${headerConfig.navPaddingX} backdrop-blur-md`}>
+      <nav className={`flex ${headerConfig.navHeight} items-center justify-between rounded-xl border border-white/[0.09] bg-black/25 ${headerConfig.navPaddingX} backdrop-blur-xl`}>
 
         {/* Логотип */}
         <button
           onClick={() => navigate('/')}
-          className={`flex ${headerConfig.logoHeight} items-center py-2 cursor-pointer`}
+          className={`flex ${headerConfig.logoHeight} items-center py-2 cursor-pointer opacity-80 hover:opacity-100 transition-opacity duration-200`}
         >
           {logo ? (
             <Image
@@ -60,19 +57,16 @@ export function FloatingHeader({
               priority
             />
           ) : (
-            <span className="font-mono text-base font-bold text-white">{logoAlt}</span>
+            <span className={`text-base font-bold text-white ${fonts.heading}`}>{logoAlt}</span>
           )}
         </button>
 
         {/* Навигация */}
         {resolvedLinks.length > 0 && (
-          <ul className="hidden items-center gap-1 md:flex font-inter-tight">
+          <ul className="hidden items-center gap-0.5 md:flex">
             {resolvedLinks.map((link) => (
               <li key={link.label}>
-                <a
-                  href={link.href}
-                  className="rounded-lg px-3 py-1.5 text-[16px] text-white/70 transition-all duration-200 hover:bg-white/15 hover:text-white"
-                >
+                <a href={link.href} className={navLinkClassName}>
                   {link.label}
                 </a>
               </li>
@@ -90,7 +84,7 @@ export function FloatingHeader({
           }
           target={isExternal ? '_blank' : undefined}
           rel={isExternal ? 'noopener noreferrer' : undefined}
-          classname="text-ml py-2 px-6"
+          classname="text-[14px] py-2 px-5"
         >
           {resolvedCtaLabel}
         </Button>

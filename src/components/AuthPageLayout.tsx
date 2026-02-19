@@ -1,19 +1,5 @@
 'use client';
 
-/**
- * AuthPageLayout
- * ─────────────────────────────────────────────────────────────────────────────
- * Переиспользуемая обёртка для auth-страниц (login, register, verify-email).
- *
- * Props (все опциональны если страница использует дефолты из site.config):
- *   aurora       — настройки Aurora-шейдера (из aurora.* в site.config)
- *   backLabel    — текст кнопки назад (из authLayout.* в site.config)
- *   backHref     — маршрут кнопки назад
- *   footerNote   — подпись под карточкой
- *   cardClassName — дополнительные классы для переопределения стиля карточки
- *   children     — форма внутри карточки
- */
-
 import React from 'react';
 import AuroraShader from '@/components/Aurora';
 import { FloatingHeader } from '@/components/FloatingHeader';
@@ -22,6 +8,7 @@ import { cn } from '@/lib/utils';
 import logo from '@/assets/logo.png';
 import { authCard } from '@/config/site.config';
 import { useNavigate } from '@/components/NavigationTransition';
+import { fonts } from '@/config/theme.config';
 
 export interface AuroraConfig {
   colorStops: [string, string, string];
@@ -32,19 +19,13 @@ export interface AuroraConfig {
 }
 
 export interface AuthPageLayoutProps {
-  /** Настройки Aurora (из aurora.* в site.config) */
   aurora: AuroraConfig;
-  /** Текст кнопки-стрелки: «На главную», «Изменить email» и т.д. */
+  /** Текст кнопки «назад» */
   backLabel: string;
-  /** Маршрут кнопки назад */
   backHref: string;
-  /** Мелкий текст под карточкой */
+  /** Подпись под карточкой */
   footerNote?: string;
-  /**
-   * Дополнительные Tailwind-классы для карточки.
-   * Позволяет переопределить или дополнить authCard.className из site.config.
-   * Пример: cardClassName="p-6" (заменит padding карточки только на этой странице)
-   */
+  /** Дополнительные классы карточки */
   cardClassName?: string;
   children: React.ReactNode;
 }
@@ -60,9 +41,9 @@ export function AuthPageLayout({
   const { navigate } = useNavigate();
 
   return (
-    <main className="relative min-h-screen bg-black flex flex-col">
+    <main className="relative min-h-screen bg-[#07070f] flex flex-col">
 
-      {/* Aurora — fullscreen фон */}
+      {/* Aurora fullscreen */}
       <div className="fixed inset-0 z-0">
         <AuroraShader
           colorStops={aurora.colorStops}
@@ -73,7 +54,7 @@ export function AuthPageLayout({
         />
       </div>
 
-      {/* FloatingHeader — стиль из header в site.config */}
+      {/* Header */}
       <div className="relative z-20">
         <FloatingHeader logo={logo} authMode />
       </div>
@@ -85,22 +66,20 @@ export function AuthPageLayout({
           {/* Кнопка назад */}
           <button
             onClick={() => navigate(backHref)}
-            className="inline-flex items-center gap-2 mb-4 text-white/60 hover:text-white transition-colors group"
+            className={`inline-flex items-center gap-2 mb-5 text-white/40 hover:text-white/80 transition-colors group ${fonts.body} text-sm`}
           >
-            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
-            <span className="text-sm">{backLabel}</span>
+            <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform duration-200" />
+            {backLabel}
           </button>
 
-          {/* Карточка формы */}
-          {/* Базовый стиль — из authCard.className в site.config */}
-          {/* cardClassName переопределяет/дополняет только на конкретной странице */}
+          {/* Карточка */}
           <div className={cn(authCard.className, cardClassName)}>
             {children}
           </div>
 
-          {/* Подпись под карточкой */}
+          {/* Подпись */}
           {footerNote && (
-            <p className="mt-4 text-center text-xs text-white/40">
+            <p className={`mt-4 text-center text-xs text-white/30 ${fonts.body}`}>
               {footerNote}
             </p>
           )}

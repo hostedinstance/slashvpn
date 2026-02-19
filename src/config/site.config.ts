@@ -54,7 +54,7 @@ export const aurora = {
 export const authCard = {
   padding: 'px-8 py-8',
   /** className передаётся как cardClassName в AuthPageLayout */
-  className: '',
+  className: 'rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl px-8 py-8 shadow-depth-l',
 } as const;
 
 // ─── AuthPageLayout ───────────────────────────────────────────────────────────

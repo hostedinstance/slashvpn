@@ -8,19 +8,25 @@ import SmoothScroll from "@/components/SmoothScroll";
 import { NavigationTransitionProvider } from "@/components/NavigationTransition";
 import { AuthProvider } from "@/components/AuthProvider";
 
+// ── Шрифты ───────────────────────────────────────────────────────────────────
+
 const interTight = Inter_Tight({
-  subsets: ["cyrillic"],
+  subsets: ["latin", "cyrillic"],
+  weight: ["300", "400", "500", "600", "700"],
   variable: "--font-inter-tight",
+  display: "swap",
 });
 
 const wixMadefor = Wix_Madefor_Display({
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
+  weight: ["400", "500", "600", "700", "800"],
   variable: "--font-wix-madefor",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: "SlashVPN",
-  description: "A landing page for an AI startup",
+  description: "Быстрый, простой и надёжный VPN-сервис.",
   icons: { icon: "/favicon.ico" },
 };
 
@@ -28,7 +34,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="ru" suppressHydrationWarning>
       <head>
         <link
           rel="stylesheet"
@@ -49,18 +55,11 @@ export default function RootLayout({
         className={twMerge(
           interTight.variable,
           wixMadefor.variable,
-          "bg-black text-white antialiased font-wix-madefor"
+          "text-white antialiased"
         )}
+        style={{ backgroundColor: "#000" }}
         suppressHydrationWarning
       >
-        {/*
-          AuthProvider — самый внешний слой:
-          инициализирует сессию и делает silent refresh токена.
-          
-          NavigationTransitionProvider — анимации переходов.
-          
-          SmoothScroll — Lenis для всех страниц.
-        */}
         <AuthProvider>
           <NavigationTransitionProvider>
             <SmoothScroll>

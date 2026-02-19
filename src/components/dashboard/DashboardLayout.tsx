@@ -53,7 +53,7 @@ function FloatingNav({
           height: 52,
           padding: '0 8px',
           borderRadius: 26,
-          background: 'rgba(18,18,32,0.82)',
+          background: 'rgba(10,10,20,0.88)',
           backdropFilter: 'blur(24px) saturate(1.6)',
           WebkitBackdropFilter: 'blur(24px) saturate(1.6)',
           boxShadow:
@@ -96,6 +96,7 @@ function FloatingNav({
               style={{
                 /* Inter Tight для навигационных меток — чёткий, compact */
                 fontFamily: 'var(--font-inter-tight), sans-serif',
+                letterSpacing: '-0.01em',
                 padding: '7px 14px',
                 ...(active
                   ? {

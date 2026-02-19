@@ -21,6 +21,10 @@ export interface FeatureItem {
 }
 
 export interface FeatureGridProps {
+  /** CSS-класс заголовка (из theme.config) */
+  titleClassName?: string;
+  /** CSS-класс подзаголовка (из theme.config) */
+  subtitleClassName?: string;
   /** Array of feature items to display. */
   features: FeatureItem[];
   /** Optional title for the entire grid section. */
@@ -169,6 +173,8 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({
                                                           sectionTitle,
                                                           sectionSubtitle,
                                                           className,
+                                                          titleClassName = "text-5xl md:text-6xl font-medium tracking-tighter text-white font-wix-madefor",
+                                                          subtitleClassName = "text-base md:text-lg text-white/55 font-inter-tight",
                                                         }) => {
   if (!features || features.length === 0) {
     return null;
@@ -176,23 +182,18 @@ export const FeatureGrid: React.FC<FeatureGridProps> = ({
 
   return (
     <section
-      className={cn("bg-black", className)}
+      className={cn("bg-[#07070f]", className)}
       role="region"
       aria-label={sectionTitle ? `Features: ${sectionTitle}` : "Product Features"}
     >
       <div className="container">
         {/* Section Header */}
         {(sectionTitle || sectionSubtitle) && (
-          <div className="text-center max-w-2xl mx-auto mb-10">
-            <h2 className="text-5xl md:text-6xl font-medium text-center tracking-tighter text-white">
-              Почему стоит выбрать
-            </h2>
-            <h2 className="text-5xl md:text-6xl font-medium text-center tracking-tighter text-white mb-5">
-              SlashVPN?
-            </h2>
-            <p className="text-lg md:text-xl font-inter-tight text-white/70 text-center tracking-tight">
-              Мы создали сервис, который не нужно «настраивать» — им нужно просто пользоваться.
-            </p>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <h2 className={titleClassName}>{sectionTitle}</h2>
+            {sectionSubtitle && (
+              <p className={`${subtitleClassName} mt-4`}>{sectionSubtitle}</p>
+            )}
           </div>
         )}
 
@@ -228,7 +229,7 @@ const FeatureCard: React.FC<{ feature: FeatureItem }> = ({ feature }) => {
       className="relative h-full min-h-[10rem]"
       role="listitem"
     >
-      <div className="relative h-full rounded-xl bg-gradient-to-b from-neutral-900 to-black p-6 overflow-hidden border-[0.75px] border-white/20 transition-all duration-300 hover:shadow-xl hover:scale-[1.01] hover:border-white/40">
+      <div className="relative h-full rounded-2xl bg-gradient-to-b from-white/[0.04] to-transparent p-6 overflow-hidden border border-white/[0.07] transition-all duration-300 hover:border-white/[0.14] hover:shadow-depth-m">
         {/* Grid Background */}
         <Grid size={20} />
 
@@ -252,10 +253,10 @@ const FeatureCard: React.FC<{ feature: FeatureItem }> = ({ feature }) => {
             </div>
           </div>
           <div className="flex-1 flex flex-col justify-end space-y-4">
-            <h3 className="text-xl font-semibold tracking-tight text-white md:text-2xl">
+            <h3 className="text-lg font-semibold tracking-tight text-white md:text-xl font-wix-madefor">
               {feature.title}
             </h3>
-            <p className="text-white/70 text-sm leading-relaxed font-inter-tight md:text-base">
+            <p className="text-white/55 text-sm leading-relaxed font-inter-tight md:text-[15px]">
               {feature.description}
             </p>
           </div>
