@@ -42,14 +42,14 @@ export const Hero = () => {
   return (
     <section className="min-h-screen flex items-center overflow-hidden relative" style={{ backgroundColor: palette.sectionBg }}>
 
-      {/* Prism background */}
+      {/* Prism background
       <div className="absolute inset-x-0 z-0" style={{ top: '-15%', bottom: '-10%' }}>
         <Prism
           color={heroStyles.prismColor} height={1.5} baseWidth={3} animationType="rotate"
           glow={0.6} noise={0} scale={isMobile ? 1 : 3.7}
           hoverStrength={0.5} bloom={1} timeScale={0.3} colorFrequency={0.1}
         />
-      </div>
+      </div>*/}
 
       {/* Vignettes */}
       <div className="absolute top-0 inset-x-0 h-48 z-[1] pointer-events-none"
