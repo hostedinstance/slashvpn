@@ -45,7 +45,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
       options={{
         lerp: 0.1,
         duration: 1.2,
-        syncTouch: true,
+        syncTouch: false,
       }}
     >
       <AnchorHandler />

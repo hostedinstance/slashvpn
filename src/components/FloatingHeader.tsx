@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { useNavigate } from '@/components/NavigationTransition';
 import { header as headerConfig, site } from '@/config/site.config';
-import { headerStyles, fonts } from '@/config/theme.config';
+import { headerStyles } from '@/config/theme.config';
 import { gsap } from 'gsap';
 import { Menu, X } from 'lucide-react';
 
@@ -32,8 +32,14 @@ export function FloatingHeader({
   authMode = false,
 }: FloatingHeaderProps) {
   const { navigate } = useNavigate();
-  const navRef       = useRef<HTMLElement>(null);
+  const navRef        = useRef<HTMLElement>(null);
+  const dropdownRef   = useRef<HTMLDivElement>(null);
+  const menuIconRef   = useRef<HTMLSpanElement>(null);
+  const closeIconRef  = useRef<HTMLSpanElement>(null);
   const [mobileOpen, setMobileOpen] = useState(false);
+  // Контролируем рендер dropdown через отдельный флаг,
+  // чтобы анимация закрытия успела отыграть до unmount
+  const [dropdownMounted, setDropdownMounted] = useState(false);
 
   const resolvedLinks    = authMode ? [] : (links ?? [...site.navLinks]);
   const resolvedCtaLabel = ctaLabel ?? (authMode ? 'Личный кабинет' : site.ctaLabel);
@@ -57,6 +63,7 @@ export function FloatingHeader({
     navigate(href);
   };
 
+  // ── Появление nav при загрузке ──────────────────────────────────────────
   useEffect(() => {
     const el = navRef.current;
     if (!el) return;
@@ -66,6 +73,65 @@ export function FloatingHeader({
       { y: 0, opacity: 1, duration: 0.7, ease: 'power3.out', delay: 0.1 }
     );
   }, []);
+
+  // ── Анимация иконки Menu ↔ X ─────────────────────────────────────────────
+  useEffect(() => {
+    const menuEl  = menuIconRef.current;
+    const closeEl = closeIconRef.current;
+    if (!menuEl || !closeEl) return;
+
+    if (mobileOpen) {
+      // Menu → прячем
+      gsap.to(menuEl,  { opacity: 0, rotate: 90, scale: 0.5, duration: 0.2, ease: 'power2.in' });
+      // X → показываем
+      gsap.fromTo(closeEl,
+        { opacity: 0, rotate: -90, scale: 0.5 },
+        { opacity: 1, rotate: 0,   scale: 1,   duration: 0.25, ease: 'back.out(2)', delay: 0.05 }
+      );
+    } else {
+      // X → прячем
+      gsap.to(closeEl,  { opacity: 0, rotate: 90, scale: 0.5, duration: 0.2, ease: 'power2.in' });
+      // Menu → показываем
+      gsap.fromTo(menuEl,
+        { opacity: 0, rotate: -90, scale: 0.5 },
+        { opacity: 1, rotate: 0,   scale: 1,   duration: 0.25, ease: 'back.out(2)', delay: 0.05 }
+      );
+    }
+  }, [mobileOpen]);
+
+  // ── Анимация dropdown открытия/закрытия ──────────────────────────────────
+  useEffect(() => {
+    if (mobileOpen) {
+      // Монтируем, потом анимируем появление
+      setDropdownMounted(true);
+    } else if (dropdownMounted) {
+      // Анимируем закрытие, потом размонтируем
+      const el = dropdownRef.current;
+      if (el) {
+        gsap.to(el, {
+          opacity: 0,
+          y: -8,
+          scale: 0.97,
+          duration: 0.18,
+          ease: 'power2.in',
+          onComplete: () => setDropdownMounted(false),
+        });
+      } else {
+        setDropdownMounted(false);
+      }
+    }
+  }, [mobileOpen]);
+
+  // Animate in when dropdown mounts
+  useEffect(() => {
+    if (!dropdownMounted) return;
+    const el = dropdownRef.current;
+    if (!el) return;
+    gsap.fromTo(el,
+      { opacity: 0, y: -10, scale: 0.96 },
+      { opacity: 1, y: 0,   scale: 1, duration: 0.28, ease: 'power3.out' }
+    );
+  }, [dropdownMounted]);
 
   return (
     <header
@@ -159,7 +225,7 @@ export function FloatingHeader({
           style={{ width: 1, height: 20, background: headerStyles.dividerBg, marginLeft: 4 }}
         />
 
-        {/* ── CTA кнопка ───────────────────────────────────────────────── */}
+        {/* ── CTA кнопка (только десктоп) ──────────────────────────────── */}
         <a
           href={isExternal || isAnchor ? resolvedCtaHref : '#'}
           target={isExternal ? '_blank' : undefined}
@@ -199,7 +265,6 @@ export function FloatingHeader({
             (e.currentTarget as HTMLAnchorElement).style.transform = '';
           }}
         >
-          {/* Иконка пользователя */}
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.9, flexShrink: 0 }}>
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
@@ -210,39 +275,67 @@ export function FloatingHeader({
         {/* ── Гамбургер (мобильный) ─────────────────────────────────────── */}
         {resolvedLinks.length > 0 && (
           <button
-            className="flex md:hidden items-center justify-center rounded-xl shrink-0 transition-all duration-200"
+            className="flex md:hidden items-center justify-center rounded-xl shrink-0"
             onClick={() => setMobileOpen((v) => !v)}
             style={{
-              width:      36,
-              height:     36,
-              marginLeft: 4,
+              width:       36,
+              height:      36,
+              marginLeft:  4,
               marginRight: 2,
-              color:      'rgba(255,255,255,0.55)',
-              background: mobileOpen ? 'rgba(255,255,255,0.08)' : 'transparent',
+              color:       'rgba(255,255,255,0.65)',
+              background:  mobileOpen ? 'rgba(255,255,255,0.08)' : 'transparent',
+              transition:  'background 0.2s ease',
+              position:    'relative',
             }}
             aria-label="Меню"
           >
-            {mobileOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            {/* Menu icon */}
+            <span
+              ref={menuIconRef}
+              style={{
+                position:  'absolute',
+                display:   'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Menu className="w-4 h-4" />
+            </span>
+            {/* X icon — изначально скрыт */}
+            <span
+              ref={closeIconRef}
+              style={{
+                position:  'absolute',
+                display:   'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                opacity:   0,
+              }}
+            >
+              <X className="w-4 h-4" />
+            </span>
           </button>
         )}
       </nav>
 
-      {/* ── Мобильное выпадающее меню ─────────────────────────────────── */}
-      {mobileOpen && resolvedLinks.length > 0 && (
+      {/* ── Мобильное выпадающее меню (только nav-ссылки, без CTA) ──────── */}
+      {dropdownMounted && resolvedLinks.length > 0 && (
         <div
+          ref={dropdownRef}
           className="absolute flex flex-col md:hidden"
           style={{
             top:                  60,
             left:                 '50%',
             transform:            'translateX(-50%)',
-            minWidth:             220,
+            minWidth:             200,
             padding:              '6px',
             borderRadius:         18,
             background:           headerStyles.mobileMenuBg,
             backdropFilter:       headerStyles.navBackdrop,
             WebkitBackdropFilter: headerStyles.navBackdrop,
             boxShadow:            headerStyles.mobileMenuShadow,
-            pointerEvents: 'all',
+            pointerEvents:        'all',
+            transformOrigin:      'top center',
           }}
         >
           {resolvedLinks.map((link) => (
@@ -276,41 +369,6 @@ export function FloatingHeader({
               {link.label}
             </a>
           ))}
-
-          <div style={{ height: 1, background: headerStyles.mobileDivider, margin: '4px 0' }} />
-
-          <a
-            href={isExternal || isAnchor ? resolvedCtaHref : '#'}
-            onClick={handleCtaClick}
-            style={{
-              fontFamily:     'var(--font-inter-tight), sans-serif',
-              fontSize:       14,
-              fontWeight:     650,
-              color:          '#fff',
-              padding:        '10px 16px',
-              borderRadius:   12,
-              letterSpacing:  '-0.01em',
-              transition:     'background 0.15s',
-              textDecoration: 'none',
-              display:        'flex',
-              alignItems:     'center',
-              gap:            6,
-              background:     headerStyles.mobileCtaBg,
-              boxShadow:      headerStyles.mobileCtaShadow,
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = headerStyles.mobileCtaHoverBg;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = headerStyles.mobileCtaBg;
-            }}
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.9, flexShrink: 0 }}>
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-              <circle cx="12" cy="7" r="4"/>
-            </svg>
-            {resolvedCtaLabel}
-          </a>
         </div>
       )}
     </header>

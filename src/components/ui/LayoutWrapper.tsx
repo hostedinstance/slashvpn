@@ -6,9 +6,9 @@
  * BlurWrapper слушает isNavigating из TransitionProvider и применяет
  * плавный blur + затемнение при клиентских переходах между страницами.
  *
- * Параметры blur намеренно мягкие — эффект заметный, но не агрессивный:
- *   appear : 0.22s (быстро — пользователь уже нажал)
- *   disappear: 0.40s (чуть медленнее — новая страница появляется плавно)
+ * willChange проставляется ТОЛЬКО в момент навигации — не постоянно.
+ * Постоянный willChange:filter держит всю страницу в отдельном GPU-слое
+ * и убивает производительность на мобильных устройствах.
  */
 
 import { type ReactNode } from 'react';
@@ -25,14 +25,12 @@ function BlurWrapper({ children }: { children: ReactNode }) {
         flex:          1,
         minHeight:     '100dvh',
         width:         '100%',
-        // Blur + небольшое затемнение при переходе
-        filter:        isNavigating ? 'blur(8px) brightness(0.6)' : 'blur(0px) brightness(1)',
+        filter:        isNavigating ? 'blur(8px) brightness(0.6)' : 'none',
         opacity:       isNavigating ? 0.55 : 1,
-        // appear быстрее, disappear медленнее для плавного входа
         transition:    isNavigating
           ? 'filter 0.22s ease, opacity 0.22s ease'
           : 'filter 0.40s ease, opacity 0.40s ease',
-        willChange:    'filter, opacity',
+        willChange:    isNavigating ? 'filter, opacity' : 'auto',
       }}
     >
       {children}

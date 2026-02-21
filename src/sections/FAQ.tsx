@@ -3,39 +3,12 @@
 import { useEffect, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import AnimatedContent from '@/components/AnimatedContent';
-import { faqStyles, fonts, palette } from '@/config/theme.config';
+import { faqConfig, faqStyles, fonts, palette } from '@/config/theme.config';
 
-export interface FAQItem {
-  id:      string;
-  title:   string;
-  content: string;
-}
-
-const ITEMS: FAQItem[] = [
-  {
-    id: 'faq-1',
-    title: 'Как SlashVPN влияет на скорость?',
-    content: 'В большинстве случаев ты даже не заметишь разницы. Мы используем быстрые протоколы, так что 4K-видео и онлайн-игры работают без лагов. Чем ближе к тебе сервер — тем выше скорость.',
-  },
-  {
-    id: 'faq-2',
-    title: 'Вы следите за тем, что я делаю?',
-    content: 'Нет. Мы вообще не знаем что ты делаешь в интернете — и знать не хотим. Никаких логов, никакой истории соединений. Всё что ты делаешь онлайн — только твоё дело.',
-  },
-  {
-    id: 'faq-3',
-    title: 'Что делать если VPN не подключается?',
-    content: 'Попробуй сменить сервер (страну) прямо в приложении. Если не помогло — напиши нам в Telegram, поддержка работает 24/7 и отвечает быстро.',
-  },
-  {
-    id: 'faq-4',
-    title: 'Можно вернуть деньги если не понравится?',
-    content: 'Да, в течение 3 дней с момента покупки — без вопросов. Мы уверены в качестве, поэтому рисков нет.',
-  },
-];
+type FAQItem = typeof faqConfig.items[number];
 
 function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
-  isOpen: boolean;
+  isOpen:   boolean;
   onToggle: () => void;
 }) {
   const bodyRef = useRef<HTMLDivElement>(null);
@@ -51,9 +24,9 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
     <div
       className="relative rounded-[20px] overflow-hidden"
       style={{
-        background: isOpen ? faqStyles.cardBgOpen : faqStyles.cardBg,
-        border: `1px solid ${isOpen ? faqStyles.cardBorderOpen : faqStyles.cardBorder}`,
-        transition: faqStyles.cardTransition,
+        background:  isOpen ? faqStyles.cardBgOpen : faqStyles.cardBg,
+        border:      `1px solid ${isOpen ? faqStyles.cardBorderOpen : faqStyles.cardBorder}`,
+        transition:  faqStyles.cardTransition,
       }}
     >
       <button
@@ -63,10 +36,7 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
       >
         <span
           className={`${fonts.heading} font-semibold text-lg md:text-xl tracking-tight`}
-          style={{
-            color: isOpen ? faqStyles.titleColorOpen : faqStyles.titleColorClosed,
-            transition: 'color 0.2s ease',
-          }}
+          style={{ color: isOpen ? faqStyles.titleColorOpen : faqStyles.titleColorClosed, transition: 'color 0.2s ease' }}
         >
           {title}
         </span>
@@ -74,7 +44,7 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
           className="shrink-0 size-7 rounded-full flex items-center justify-center"
           style={{
             background: isOpen ? faqStyles.plusBgOpen : faqStyles.plusBgClosed,
-            transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
+            transform:  isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
             transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), background 0.2s ease',
           }}
         >
@@ -84,10 +54,7 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
 
       <div
         ref={bodyRef}
-        style={{
-          maxHeight: 0, opacity: 0, overflow: 'hidden',
-          transition: 'max-height 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease',
-        }}
+        style={{ maxHeight: 0, opacity: 0, overflow: 'hidden', transition: 'max-height 0.4s cubic-bezier(0.22,1,0.36,1), opacity 0.3s ease' }}
       >
         <div className="px-7 md:px-8 pb-7">
           <div className="h-px mb-5" style={{ background: faqStyles.divider }} />
@@ -101,48 +68,43 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
 }
 
 export function FAQ() {
-  const [openId, setOpenId] = useState<string>('faq-1');
+  // Пустая строка — ни один блок не открыт по умолчанию
+  const [openId, setOpenId] = useState<string>('');
 
   return (
     <section id="faq" className={`relative ${faqStyles.sectionPadding}`} style={{ backgroundColor: palette.sectionBg }}>
       <div className={faqStyles.container}>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-14 lg:gap-20 items-start">
 
-          {/* Left — title, slides from left */}
-          <AnimatedContent
-            distance={50}
-            direction="horizontal"
-            reverse
-            duration={0.85}
-            ease="power3.out"
-            threshold={0.2}
-          >
+          {/* Left — title */}
+          <AnimatedContent distance={50} direction="horizontal" reverse duration={0.85} ease="power3.out" threshold={0.2}>
             <div className="flex flex-col gap-5">
-              <h2 className={`${fonts.heading} font-bold text-4xl md:text-5xl tracking-tight`} style={{ color: faqStyles.sectionHeadingColor }}>
-                Часто задаваемые{' '}
+              <h2 className={`${fonts.heading} font-bold text-4xl md:text-5xl tracking-tight`}
+                  style={{ color: faqStyles.sectionHeadingColor }}>
+                {faqConfig.headingText}{' '}
                 <span style={{ background: faqStyles.headingGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  {faqStyles.headingGradientWord}
+                  {faqConfig.headingGradientWord}
                 </span>
               </h2>
               <p className={`${fonts.body} text-base leading-relaxed`} style={{ color: faqStyles.subtitleColor }}>
-                Не нашёл ответа?{' '}
+                {faqConfig.subtitlePrefix}{' '}
                 <a
-                  href="https://t.me/vpnslash"
+                  href={faqConfig.supportHref}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="transition-colors duration-200 hover:text-white"
                   style={{ color: faqStyles.linkColor }}
                 >
-                  Напиши нам в Telegram
+                  {faqConfig.subtitleLinkText}
                 </a>
-                {' '}— ответим за пару минут.
+                {' '}{faqConfig.subtitleSuffix}
               </p>
             </div>
           </AnimatedContent>
 
-          {/* Right — accordion items, each staggered from right */}
+          {/* Right — accordion */}
           <div className="flex flex-col gap-2.5">
-            {ITEMS.map((item, i) => (
+            {faqConfig.items.map((item, i) => (
               <AnimatedContent
                 key={item.id}
                 distance={40}
@@ -160,6 +122,7 @@ export function FAQ() {
               </AnimatedContent>
             ))}
           </div>
+
         </div>
       </div>
     </section>

@@ -1,19 +1,38 @@
 /**
  * ─────────────────────────────────────────────────────────────────────────────
- * SITE CONFIG — единое место для всех визуальных настроек
+ * SITE CONFIG — настройки сайта, тексты, ссылки, данные контента
  * ─────────────────────────────────────────────────────────────────────────────
  */
 
 // ─── Общие ───────────────────────────────────────────────────────────────────
 
 export const site = {
-  name: 'SlashVPN',
+  name:     'SlashVPN',
   ctaLabel: 'Войти',
-  ctaHref: '/login',
+  ctaHref:  '/login',
   navLinks: [
-    { label: 'кек', href: '#features'  },
+    { label: 'Преимущества', href: '#features'  },
     { label: 'Локации',      href: '#locations' },
     { label: 'FAQ',          href: '#faq'       },
+  ],
+} as const;
+
+// ─── Локации ─────────────────────────────────────────────────────────────────
+
+export const locationsConfig = {
+  activeCountries: [
+    { name: 'США',        flag: 'us', code: 'US' },
+    { name: 'Германия',   flag: 'de', code: 'DE' },
+    { name: 'Нидерланды', flag: 'nl', code: 'NL' },
+    { name: 'Финляндия',  flag: 'fi', code: 'FI' },
+    { name: 'Швеция',     flag: 'se', code: 'SE' },
+  ],
+  upcomingCountries: [
+    { name: 'Франция',   flag: 'fr', code: 'FR' },
+    { name: 'Канада',    flag: 'ca', code: 'CA' },
+    { name: 'Польша',    flag: 'pl', code: 'PL' },
+    { name: 'Австралия', flag: 'au', code: 'AU' },
+    { name: 'Испания',   flag: 'es', code: 'ES' },
   ],
 } as const;
 
@@ -48,12 +67,9 @@ export const aurora = {
 } as const;
 
 // ─── Auth card ────────────────────────────────────────────────────────────────
-// Styling теперь в AuthPageLayout.tsx через inline style (glassmorphism)
-// authCard.className используется только как passthrough для cardClassName prop
 
 export const authCard = {
-  padding: 'px-8 py-8',
-  /** className передаётся как cardClassName в AuthPageLayout */
+  padding:   'px-8 py-8',
   className: 'rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl px-8 py-8 shadow-depth-l',
 } as const;
 
