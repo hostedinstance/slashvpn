@@ -37,8 +37,8 @@ export function DashboardSidebar({
     <aside
       className="flex flex-col w-[210px] shrink-0 min-h-screen select-none"
       style={{
-        background: '#09090f',
-        borderRight: '1px solid rgba(255,255,255,0.04)',
+        background: '#010E38',
+        borderRight: '1px solid rgba(100,140,255,0.08)',
       }}
     >
       {/* Logo */}

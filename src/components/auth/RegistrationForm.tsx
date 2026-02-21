@@ -107,11 +107,11 @@ export function RegistrationForm({
 
       {/* Шапка */}
       <div className="text-center">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/[0.07] border border-white/[0.1] mb-5">
-          <UserPlus className="w-7 h-7 text-white" />
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5" style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)"}}>
+          <UserPlus className="w-7 h-7" style={{color:"rgba(255,255,255,0.80)"}} />
         </div>
-        <h1 className="text-2xl font-semibold text-white tracking-tight mb-1 font-wix-madefor">{title}</h1>
-        <p className="text-white/45 text-sm font-inter-tight">{subtitle}</p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2 font-wix-madefor text-white">{title}</h1>
+        <p className="text-sm font-inter-tight" style={{color:"rgba(255,255,255,0.45)"}}>{subtitle}</p>
       </div>
 
       {/* Ошибка */}
@@ -124,7 +124,7 @@ export function RegistrationForm({
       {/* Поля */}
       <div className="space-y-4">
         <div>
-          <label htmlFor="reg-name" className="block text-sm font-medium text-white/60 mb-1.5 font-inter-tight">Имя</label>
+          <label htmlFor="reg-name" className="block text-sm font-medium mb-1.5 font-inter-tight" style={{color:"rgba(255,255,255,0.52)"}}>Имя</label>
           <Input
             id="reg-name"
             type="text"
@@ -138,7 +138,7 @@ export function RegistrationForm({
         </div>
 
         <div>
-          <label htmlFor="reg-email" className="block text-sm font-medium text-white/60 mb-1.5 font-inter-tight">Email</label>
+          <label htmlFor="reg-email" className="block text-sm font-medium mb-1.5 font-inter-tight" style={{color:"rgba(255,255,255,0.52)"}}>Email</label>
           <Input
             id="reg-email"
             type="email"
@@ -151,7 +151,7 @@ export function RegistrationForm({
         </div>
 
         <div>
-          <label htmlFor="reg-password" className="block text-sm font-medium text-white/60 mb-1.5 font-inter-tight">
+          <label htmlFor="reg-password" className="block text-sm font-medium mb-1.5 font-inter-tight" style={{color:"rgba(255,255,255,0.52)"}}>
             Пароль
           </label>
           <PasswordInput
@@ -176,15 +176,26 @@ export function RegistrationForm({
       </AuthButton>
 
       {/* Ссылка на вход */}
-      <p className="text-center text-sm text-white/45 font-inter-tight">
+      <p className="text-center text-sm font-inter-tight" style={{color:"rgba(255,255,255,0.40)"}}>
         Уже есть аккаунт?{' '}
         <button
           type="button"
           onClick={() => navigate(loginHref)}
-          className="text-white hover:text-white/80 transition-colors underline underline-offset-2"
+          className="transition-colors duration-200 underline underline-offset-2 hover:text-white" style={{color:"rgba(255,255,255,0.75)"}}
         >
           Войти
         </button>
+      </p>
+
+      {/* Legal */}
+      <p className="text-center text-[11px] leading-relaxed font-inter-tight" style={{color:"rgba(255,255,255,0.28)"}}>
+        Нажимая «Зарегистрироваться», вы соглашаетесь с{' '}
+        <a href="/terms" className="underline underline-offset-2 hover:text-white/90 transition-colors duration-200" style={{color:"rgba(210,225,255,0.55)"}}>
+          Условиями использования
+        </a>{' '}и{' '}
+        <a href="/privacy" className="underline underline-offset-2 hover:text-white/90 transition-colors duration-200" style={{color:"rgba(210,225,255,0.55)"}}>
+          Политикой конфиденциальности
+        </a>
       </p>
 
     </form>

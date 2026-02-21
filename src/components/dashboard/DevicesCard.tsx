@@ -3,92 +3,75 @@
 import { useState } from 'react';
 import { Monitor, Smartphone, Tablet, Laptop, Trash2, Circle } from 'lucide-react';
 
-interface Device {
-  id: string;
-  name: string;
-  type: 'desktop' | 'mobile' | 'tablet' | 'laptop';
-  os: string;
-  lastSeen: string;
-  online: boolean;
-  current: boolean;
-}
+const C = { card: '#010E38', raised: '#01144A', border: 'rgba(100,140,255,0.08)', text: 'rgba(230,238,255,0.96)', dim: 'rgba(180,205,255,0.45)' };
+
+interface Device { id: string; name: string; type: 'desktop'|'mobile'|'tablet'|'laptop'; os: string; lastSeen: string; online: boolean; current: boolean; }
 
 const DEVICES_INIT: Device[] = [
-  { id: 'd1', name: 'MacBook Pro',    type: 'laptop',  os: 'macOS 14.4',    lastSeen: 'Сейчас',     online: true,  current: true  },
-  { id: 'd2', name: 'iPhone 15',      type: 'mobile',  os: 'iOS 17.4',      lastSeen: '2 ч. назад', online: false, current: false },
-  { id: 'd3', name: 'iPad Air',       type: 'tablet',  os: 'iPadOS 17',     lastSeen: 'вчера',      online: false, current: false },
+  { id:'d1', name:'MacBook Pro',  type:'laptop', os:'macOS 14.4',  lastSeen:'Сейчас',     online:true,  current:true  },
+  { id:'d2', name:'iPhone 15',    type:'mobile', os:'iOS 17.4',    lastSeen:'2 ч. назад', online:false, current:false },
+  { id:'d3', name:'iPad Air',     type:'tablet', os:'iPadOS 17',   lastSeen:'вчера',       online:false, current:false },
 ];
 
-const TYPE_ICON = {
-  desktop: Monitor,
-  mobile:  Smartphone,
-  tablet:  Tablet,
-  laptop:  Laptop,
-};
+const ICONS = { desktop: Monitor, mobile: Smartphone, tablet: Tablet, laptop: Laptop };
+const MAX = 1;
 
-const MAX_DEVICES = 1; // Free plan
-
-export function DevicesCard({ plan = 'free' }: { plan?: 'free' | 'pro' }) {
+export function DevicesCard({ plan = 'free' }: { plan?: 'free'|'pro' }) {
   const [devices, setDevices] = useState<Device[]>(DEVICES_INIT);
-  const limit = plan === 'pro' ? 5 : MAX_DEVICES;
-
-  const remove = (id: string) => {
-    setDevices((prev) => prev.filter((d) => d.id !== id));
-  };
+  const limit = plan === 'pro' ? 5 : MAX;
 
   return (
-    <div className="rounded-2xl bg-[#141420] border border-white/8 p-6">
-      {/* Заголовок */}
+    <div className="rounded-2xl p-6" style={{ background: C.card, border: `1px solid ${C.border}` }}>
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-base font-semibold text-white">Устройства</h3>
+        <h3 className="text-base font-semibold font-wix-madefor" style={{ color: C.text }}>Устройства</h3>
         <div className="flex items-center gap-1.5">
-          <span className="text-xs text-white/40">{devices.length}/{limit}</span>
+          <span className="text-xs font-inter-tight" style={{ color: C.dim }}>{devices.length}/{limit}</span>
           <div className="flex gap-0.5">
             {Array.from({ length: limit }).map((_, i) => (
-              <div key={i} className={`w-4 h-1.5 rounded-full ${i < devices.length ? 'bg-violet-500' : 'bg-white/10'}`} />
+              <div key={i} className="w-4 h-1.5 rounded-full"
+                style={{ background: i < devices.length ? '#6B2EFF' : 'rgba(100,140,255,0.12)' }} />
             ))}
           </div>
         </div>
       </div>
 
-      {/* Список */}
       <div className="space-y-2">
         {devices.map((d) => {
-          const Icon = TYPE_ICON[d.type];
+          const Icon = ICONS[d.type];
           return (
-            <div key={d.id}
-              className={`flex items-center gap-3 px-3 py-3 rounded-xl border transition-all ${
-                d.current
-                  ? 'bg-violet-600/10 border-violet-500/20'
-                  : 'bg-white/3 border-white/5 hover:bg-white/5'
-              }`}
-            >
-              <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
-                d.current ? 'bg-violet-600/25' : 'bg-white/8'
-              }`}>
-                <Icon className={`w-4.5 h-4.5 ${d.current ? 'text-violet-400' : 'text-white/50'}`} />
+            <div key={d.id} className="flex items-center gap-3 px-3 py-3 rounded-xl transition-all duration-200"
+              style={{
+                background: d.current ? 'rgba(107,46,255,0.12)' : C.raised,
+                border: `1px solid ${d.current ? 'rgba(107,46,255,0.25)' : C.border}`,
+              }}>
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shrink-0"
+                style={{ background: d.current ? 'rgba(107,46,255,0.22)' : 'rgba(100,140,255,0.08)' }}>
+                <Icon className="w-4 h-4" style={{ color: d.current ? 'rgba(167,139,250,0.9)' : C.dim }} />
               </div>
-
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <p className="text-xs font-medium text-white/90 truncate">{d.name}</p>
+                  <p className="text-xs font-semibold font-inter-tight truncate" style={{ color: C.text }}>{d.name}</p>
                   {d.current && (
-                    <span className="px-1.5 py-0.5 rounded text-[9px] bg-violet-600/30 text-violet-300 font-semibold shrink-0">
+                    <span className="px-1.5 py-0.5 rounded text-[9px] font-bold font-inter-tight shrink-0"
+                      style={{ background: 'rgba(107,46,255,0.22)', color: 'rgba(180,160,255,0.9)' }}>
                       ЭТО УСТРОЙСТВО
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-2 mt-0.5">
-                  <Circle className={`w-1.5 h-1.5 shrink-0 ${d.online ? 'text-emerald-400 fill-emerald-400' : 'text-white/20 fill-white/20'}`} />
-                  <p className="text-[10px] text-white/30 truncate">{d.os} · {d.lastSeen}</p>
+                  <Circle className="w-1.5 h-1.5 shrink-0"
+                    style={{ color: d.online ? '#34d399' : 'rgba(140,175,255,0.20)', fill: 'currentColor' }} />
+                  <p className="text-[10px] font-inter-tight truncate" style={{ color: 'rgba(140,175,255,0.35)' }}>
+                    {d.os} · {d.lastSeen}
+                  </p>
                 </div>
               </div>
-
               {!d.current && (
-                <button
-                  onClick={() => remove(d.id)}
-                  className="w-7 h-7 rounded-lg flex items-center justify-center text-white/20 hover:text-red-400 hover:bg-red-500/10 transition-all shrink-0"
-                >
+                <button onClick={() => setDevices((p) => p.filter((x) => x.id !== d.id))}
+                  className="w-7 h-7 rounded-lg flex items-center justify-center transition-all duration-200 shrink-0"
+                  style={{ color: 'rgba(140,175,255,0.25)' }}
+                  onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.background = 'rgba(248,113,113,0.10)'; (e.currentTarget as HTMLElement).style.color = '#f87171'; }}
+                  onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.background = ''; (e.currentTarget as HTMLElement).style.color = 'rgba(140,175,255,0.25)'; }}>
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
               )}
@@ -97,11 +80,11 @@ export function DevicesCard({ plan = 'free' }: { plan?: 'free' | 'pro' }) {
         })}
       </div>
 
-      {/* Лимит Free */}
       {plan === 'free' && devices.length >= limit && (
-        <div className="mt-3 flex items-center gap-2 p-3 rounded-xl bg-amber-500/8 border border-amber-500/15">
-          <span className="text-[11px] text-amber-400/80">
-            Лимит устройств для Free. Upgrade → до 5 устройств
+        <div className="mt-3 flex items-center gap-2 p-3 rounded-xl"
+          style={{ background: 'rgba(251,191,36,0.06)', border: '1px solid rgba(251,191,36,0.15)' }}>
+          <span className="text-[11px] font-inter-tight" style={{ color: 'rgba(251,191,36,0.80)' }}>
+            Лимит Free. Upgrade → до 5 устройств
           </span>
         </div>
       )}

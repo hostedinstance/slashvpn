@@ -7,7 +7,7 @@ export function Header() {
     <FloatingHeader
       logo={logo}
       links={[...site.navLinks]}
-      ctaLabel="Войти"
+      ctaLabel="Личный кабинет"
       ctaHref="/login"
     />
   );

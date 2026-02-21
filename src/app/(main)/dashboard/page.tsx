@@ -16,12 +16,6 @@ export default function DashboardPage() {
   const { navigate } = useNavigate();
   const { user, loading, isLoggedIn, logout } = useAuth();
   const [section, setSection] = useState<Section>('profile');
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 60);
-    return () => clearTimeout(t);
-  }, []);
 
   useEffect(() => {
     if (loading) return;
@@ -29,27 +23,9 @@ export default function DashboardPage() {
   }, [loading, isLoggedIn, router]);
 
   const handleLogout = () => { logout(); navigate('/'); };
+  const handleSectionChange = (id: string) => setSection(id as Section);
 
-  const handleSectionChange = (id: string) => {
-    setVisible(false);
-    setTimeout(() => {
-      setSection(id as Section);
-      setVisible(true);
-    }, 130);
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#07070f' }}>
-        <div
-          className="w-7 h-7 rounded-full border-2 border-t-transparent animate-spin"
-          style={{ borderColor: 'rgba(139,92,246,0.4)', borderTopColor: 'transparent' }}
-        />
-      </div>
-    );
-  }
-
-  if (!user) return null;
+  if (loading || !user) return null;
 
   const displayName = user.name || user.username;
   const plan: 'free' | 'pro' = user.verified ? 'pro' : 'free';
@@ -62,23 +38,13 @@ export default function DashboardPage() {
       onSectionChange={handleSectionChange}
       onLogout={handleLogout}
     >
-      {/* Section transition wrapper */}
-      <div
-        style={{
-          opacity: visible ? 1 : 0,
-          transform: visible ? 'translateY(0)' : 'translateY(14px)',
-          transition: 'opacity 0.32s ease, transform 0.32s cubic-bezier(0.22,1,0.36,1)',
-        }}
-      >
-        {section === 'profile' ? (
-          <div style={{ maxWidth: 600, margin: '0 auto' }}>
-            <ProfileCard userName={displayName} plan={plan} />
-          </div>
-        ) : (
-          /* Billing — wider, centered */
-          <SubscriptionCard plan={plan} />
-        )}
-      </div>
+      {section === 'profile' ? (
+        <div style={{ maxWidth: 600, margin: '0 auto' }}>
+          <ProfileCard userName={displayName} plan={plan} />
+        </div>
+      ) : (
+        <SubscriptionCard plan={plan} />
+      )}
     </DashboardLayout>
   );
 }

@@ -53,7 +53,7 @@ function FloatingNav({
           height: 52,
           padding: '0 8px',
           borderRadius: 26,
-          background: 'rgba(10,10,20,0.88)',
+          background: 'rgba(0,9,43,0.92)',
           backdropFilter: 'blur(24px) saturate(1.6)',
           WebkitBackdropFilter: 'blur(24px) saturate(1.6)',
           boxShadow:
@@ -100,9 +100,9 @@ function FloatingNav({
                 padding: '7px 14px',
                 ...(active
                   ? {
-                      background: 'rgba(139,92,246,0.2)',
-                      color: 'rgba(167,139,250,0.95)',
-                      boxShadow: '0 0 0 1px rgba(139,92,246,0.25)',
+                      background: 'rgba(1,20,74,0.95)',
+                      color: 'rgba(100,160,255,0.95)',
+                      boxShadow: '0 0 0 1px rgba(100,140,255,0.30)',
                     }
                   : { color: 'rgba(255,255,255,0.38)' }),
               }}
@@ -160,8 +160,8 @@ function FloatingNav({
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ml-1"
           style={{
-            background: 'linear-gradient(145deg, #7c3aed, #4f46e5)',
-            boxShadow: '0 0 10px rgba(124,58,237,0.22)',
+            background: 'linear-gradient(145deg, rgba(1,20,74,0.98), rgba(20,60,160,0.90))',
+            boxShadow: '0 0 10px rgba(100,140,255,0.22)',
           }}
         >
           <span
@@ -214,7 +214,7 @@ export function DashboardLayout({
   onSectionChange,
 }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen" style={{ background: '#07070f' }}>
+    <div className="min-h-screen" style={{ background: '#00092B' }}>
       <FloatingNav
         userName={userName}
         userPlan={userPlan}

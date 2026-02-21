@@ -1,79 +1,68 @@
-import * as React from "react"
+'use client';
 
-import { cn } from "@/lib/utils"
+import { motion, HTMLMotionProps } from 'framer-motion';
+import { type ReactNode } from 'react';
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-lg border bg-card text-card-foreground shadow-sm",
-      className,
-    )}
-    {...props}
-  />
-))
-Card.displayName = "Card"
+// ── Types ─────────────────────────────────────────────────────────────────────
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
-))
-CardHeader.displayName = "CardHeader"
+type CardVariant = 'default' | 'raised' | 'ghost' | 'accent';
 
-const CardTitle = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn(
-      "text-2xl font-semibold leading-none tracking-tight",
-      className,
-    )}
-    {...props}
-  />
-))
-CardTitle.displayName = "CardTitle"
+interface CardProps extends HTMLMotionProps<'div'> {
+  variant?:  CardVariant;
+  hover?:    boolean;
+  children:  ReactNode;
+  padding?:  'none' | 'sm' | 'md' | 'lg' | 'xl';
+}
 
-const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-muted-foreground", className)}
-    {...props}
-  />
-))
-CardDescription.displayName = "CardDescription"
+// ── Style Maps ────────────────────────────────────────────────────────────────
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-))
-CardContent.displayName = "CardContent"
+const variantStyles: Record<CardVariant, string> = {
+  default: 'bg-surface-raised shadow-soft shadow-inner-top',
+  raised:  'bg-surface-overlay shadow-soft shadow-inner-top',
+  ghost:   'bg-white/[0.03]',
+  accent:  'bg-accent-subtle shadow-glow-sm',
+};
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
-    {...props}
-  />
-))
-CardFooter.displayName = "CardFooter"
+const paddingStyles = {
+  none: '',
+  sm:   'p-4',
+  md:   'p-6',
+  lg:   'p-8',
+  xl:   'p-10 md:p-12',
+};
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+// ── Component ─────────────────────────────────────────────────────────────────
+
+export function Card({
+  variant  = 'default',
+  hover    = false,
+  padding  = 'lg',
+  children,
+  className = '',
+  ...props
+}: CardProps) {
+  const base = [
+    'rounded-squircle overflow-hidden',
+    variantStyles[variant],
+    paddingStyles[padding],
+    hover ? 'transition-all duration-300 cursor-pointer' : '',
+    className,
+  ].join(' ');
+
+  return (
+    <motion.div
+      className={base}
+      whileHover={hover ? { y: -4, scale: 1.005 } : undefined}
+      transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+      {...props}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+// ── Divider ───────────────────────────────────────────────────────────────────
+
+export function CardDivider({ className = '' }: { className?: string }) {
+  return <div className={`h-px bg-surface-border ${className}`} />;
+}

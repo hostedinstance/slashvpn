@@ -23,8 +23,8 @@ function Avatar({ initial }: { initial: string }) {
     <div
       className="relative w-20 h-20 rounded-[22px] flex items-center justify-center shrink-0 select-none"
       style={{
-        background: 'linear-gradient(145deg, #7c3aed 0%, #4f46e5 55%, #3730a3 100%)',
-        boxShadow: '0 0 0 1px rgba(139,92,246,0.3), 0 16px 48px -8px rgba(124,58,237,0.5)',
+        background: 'linear-gradient(145deg, rgba(1,20,74,0.98) 0%, rgba(20,60,160,0.95) 55%, rgba(1,35,120,0.90) 100%)',
+        boxShadow: '0 0 0 1px rgba(100,140,255,0.30), 0 16px 48px -8px rgba(20,60,160,0.50)',
       }}
     >
       <span style={{ fontFamily: F_MONO, fontSize: 28, fontWeight: 800, color: 'white', lineHeight: 1 }}>
@@ -33,7 +33,7 @@ function Avatar({ initial }: { initial: string }) {
       {/* Online dot */}
       <span
         className="absolute -bottom-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center"
-        style={{ background: '#07070f' }}
+        style={{ background: '#000c28' }}
       >
         <span className="w-3 h-3 rounded-full" style={{ background: '#34d399', boxShadow: '0 0 8px rgba(52,211,153,0.7)' }} />
       </span>
@@ -90,7 +90,7 @@ function SubscriptionBlock({ plan }: { plan: 'free' | 'pro' }) {
   const urgency =
     leftDays <= 2  ? { bar: '#ef4444', glow: 'rgba(239,68,68,0.35)',   text: '#ef4444' } :
     leftDays <= 7  ? { bar: '#f59e0b', glow: 'rgba(245,158,11,0.3)',   text: '#f59e0b' } :
-                     { bar: '#8b5cf6', glow: 'rgba(139,92,246,0.35)',  text: 'rgba(167,139,250,0.9)' };
+                     { bar: 'rgba(100,160,255,0.90)', glow: 'rgba(100,140,255,0.35)',  text: 'rgba(100,160,255,0.90)' };
 
   return (
     <div
@@ -101,7 +101,7 @@ function SubscriptionBlock({ plan }: { plan: 'free' | 'pro' }) {
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-2.5">
           <Clock className="w-4 h-4" style={{ color: urgency.text }} />
-          <span style={{ fontFamily: F_DISPLAY, fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>
+          <span style={{ fontFamily: F_DISPLAY, fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>
             Подписка
           </span>
         </div>
@@ -109,8 +109,8 @@ function SubscriptionBlock({ plan }: { plan: 'free' | 'pro' }) {
           className="px-2.5 py-1 rounded-lg"
           style={{
             fontFamily: F_MONO, fontSize: 10, fontWeight: 700,
-            background: plan === 'pro' ? 'rgba(139,92,246,0.16)' : 'rgba(249,115,22,0.14)',
-            color: plan === 'pro' ? 'rgba(167,139,250,0.9)' : '#fb923c',
+            background: plan === 'pro' ? 'rgba(1,20,74,0.90)' : 'rgba(249,115,22,0.14)',
+            color: plan === 'pro' ? 'rgba(100,160,255,0.90)' : '#fb923c',
           }}
         >
           {plan === 'pro' ? 'Мульти' : 'Free'}
@@ -185,7 +185,7 @@ function BalanceBlock() {
       <div className="flex items-center justify-between px-4 pt-4 pb-3">
         <div className="flex items-center gap-2.5">
           <Wallet className="w-4 h-4" style={{ color: 'rgba(52,211,153,0.8)' }} />
-          <span style={{ fontFamily: F_DISPLAY, fontSize: 13, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>
+          <span style={{ fontFamily: F_DISPLAY, fontSize: 15, fontWeight: 600, color: 'rgba(255,255,255,0.7)' }}>
             Баланс
           </span>
         </div>
@@ -240,9 +240,9 @@ function MetaRow({ icon, label, value }: { icon: React.ReactNode; label: string;
     >
       <div className="flex items-center gap-3">
         <span style={{ color: 'rgba(255,255,255,0.22)' }}>{icon}</span>
-        <span style={{ fontFamily: F_DISPLAY, fontSize: 13, color: 'rgba(255,255,255,0.38)' }}>{label}</span>
+        <span style={{ fontFamily: F_DISPLAY, fontSize: 15, color: 'rgba(255,255,255,0.38)' }}>{label}</span>
       </div>
-      <span style={{ fontFamily: F_MONO, fontSize: 13, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>
+      <span style={{ fontFamily: F_MONO, fontSize: 15, fontWeight: 500, color: 'rgba(255,255,255,0.7)' }}>
         {value}
       </span>
     </div>
@@ -272,13 +272,13 @@ export function ProfileCard({ userName, plan }: ProfileCardProps) {
     <div
       className="relative overflow-hidden rounded-3xl"
       style={{
-        background: 'linear-gradient(160deg, #0f0f22 0%, #09090f 60%, #0b0915 100%)',
+        background: 'linear-gradient(160deg, #010E38 0%, #000918 60%, #000c28 100%)',
         boxShadow: '0 0 0 1px rgba(255,255,255,0.05), 0 40px 80px -20px rgba(0,0,0,0.7)',
       }}
     >
       {/* Orbs */}
-      <div className="absolute pointer-events-none" style={{ top: -80, right: -80, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)' }} />
-      <div className="absolute pointer-events-none" style={{ bottom: -60, left: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(79,70,229,0.07) 0%, transparent 70%)' }} />
+      <div className="absolute pointer-events-none" style={{ top: -80, right: -80, width: 280, height: 280, borderRadius: '50%', background: 'radial-gradient(circle, rgba(20,60,160,0.18) 0%, transparent 70%)' }} />
+      <div className="absolute pointer-events-none" style={{ bottom: -60, left: -40, width: 200, height: 200, borderRadius: '50%', background: 'radial-gradient(circle, rgba(1,30,100,0.12) 0%, transparent 70%)' }} />
 
       <div className="relative p-7">
 
@@ -318,7 +318,7 @@ export function ProfileCard({ userName, plan }: ProfileCardProps) {
               </div>
             ) : (
               <div className="flex items-center gap-2 mb-2">
-                <span style={{ fontFamily: F_DISPLAY, fontSize: 20, fontWeight: 700, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
+                <span style={{ fontFamily: F_DISPLAY, fontSize: 24, fontWeight: 700, color: 'rgba(255,255,255,0.92)', letterSpacing: '-0.02em' }}>
                   {name}
                 </span>
                 <button

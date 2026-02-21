@@ -3,12 +3,10 @@
 import { useState, useEffect } from 'react';
 import Prism from '@/components/Prism';
 import TextType from '@/components/TextType';
-import FadeContent from '@/components/FadeContent';
 import { Button } from '@/components/Button';
 import { Eye, Wifi, Globe } from 'lucide-react';
+import AnimatedContent from '@/components/AnimatedContent';
 
-// ── Accent color — matches navy card color used across the site ───────────────
-// Used for highlighted text instead of violet gradient
 const ACCENT_TEXT = 'rgba(100, 160, 255, 0.90)';
 
 const TRUST = [
@@ -45,77 +43,89 @@ export const Hero = () => {
   return (
     <section className="min-h-screen flex items-center overflow-hidden relative" style={{ backgroundColor: '#000' }}>
 
-      {/* Prism — shifted up to visual center */}
+      {/* Prism background */}
       <div className="absolute inset-x-0 z-0" style={{ top: '-15%', bottom: '-10%' }}>
         <Prism
           color="#4800ff" height={1.5} baseWidth={3} animationType="rotate"
-          glow={1} noise={0} scale={isMobile ? 1 : 3.7}
-          hoverStrength={0.5} bloom={1} timeScale={0.3} colorFrequency={0}
+          glow={0.6} noise={0} scale={isMobile ? 1 : 3.7}
+          hoverStrength={0.5} bloom={1} timeScale={0.3} colorFrequency={0.1}
         />
       </div>
 
-      {/* Top darkening veil */}
+      {/* Vignettes */}
       <div className="absolute top-0 inset-x-0 h-48 z-[1] pointer-events-none"
         style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.80), transparent)' }} />
-
-      {/* Soft radial edges */}
       <div className="absolute inset-0 z-[1] pointer-events-none"
         style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 45%, transparent 25%, rgba(0,0,0,0.50) 100%)' }} />
-
-      {/* BOTTOM fade — smooth transition to #000 background, NO border/line */}
       <div className="absolute bottom-0 inset-x-0 h-64 z-[1] pointer-events-none"
         style={{ background: 'linear-gradient(to top, #000 0%, rgba(0,0,0,0.85) 40%, transparent 100%)' }} />
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-32 pb-40">
-        <FadeContent blur duration={1200} ease="power3.out" initialOpacity={0}
-          className="flex flex-col items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
 
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
-            style={{ background: 'rgba(1,14,56,0.85)', border: '1px solid rgba(100,140,255,0.20)' }}>
-            <span className="size-1.5 rounded-full animate-pulse" style={{ background: ACCENT_TEXT }} />
-            <span className="font-inter-tight text-[11px] uppercase tracking-[0.12em]"
-              style={{ color: 'rgba(200,215,255,0.60)' }}>
-              SlashVPN — 2026
-            </span>
-          </div>
+          <AnimatedContent distance={30} duration={0.7} ease="power3.out" delay={0.1} threshold={0}>
+            <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
+              style={{ background: 'rgba(1,14,56,0.85)', border: '1px solid rgba(100,140,255,0.20)' }}>
+              <span className="size-1.5 rounded-full animate-pulse" style={{ background: ACCENT_TEXT }} />
+              <span className="font-inter-tight text-[11px] uppercase tracking-[0.12em]"
+                style={{ color: 'rgba(200,215,255,0.60)' }}>
+                SlashVPN — 2026
+              </span>
+            </div>
+          </AnimatedContent>
 
-          {/* Heading — solid white, no gradient */}
-          <h1 className="text-center text-6xl md:text-[7rem] leading-none font-grifter-bold mb-8 text-white">
-            <TextType
-              text={['SLASH VPN', '//slashvpn']}
-              as="span"
-              typingSpeed={60}
-              showCursor
-              cursorCharacter="|"
-              cursorClassName="ml-1"
-              deletingSpeed={40}
-              pauseDuration={3000}
-            />
-          </h1>
+          {/* Heading */}
+          <AnimatedContent distance={40} duration={0.85} ease="power3.out" delay={0.2} threshold={0}>
+            <h1 className="text-center text-6xl md:text-[7rem] leading-none font-grifter-bold mb-8 text-white">
+              <TextType
+                text={['SLASH VPN', '//slashvpn']}
+                as="span"
+                typingSpeed={60}
+                showCursor
+                cursorCharacter="|"
+                cursorClassName="ml-1"
+                deletingSpeed={40}
+                pauseDuration={3000}
+              />
+            </h1>
+          </AnimatedContent>
 
           {/* Subtitle */}
-          <p className="font-inter-tight text-base md:text-xl text-center max-w-xl mx-auto leading-relaxed mb-10"
-            style={{ color: 'rgba(200,215,255,0.55)' }}>
-            Твой надёжный доступ к любым сайтам — быстро, просто и надёжно.
-          </p>
+          <AnimatedContent distance={35} duration={0.8} ease="power3.out" delay={0.3} threshold={0}>
+            <p className="font-inter-tight text-base md:text-xl text-center max-w-xl mx-auto leading-relaxed mb-10"
+              style={{ color: 'rgba(200,215,255,0.55)' }}>
+              Твой надёжный доступ к любым сайтам — быстро, просто и надёжно.
+            </p>
+          </AnimatedContent>
 
           {/* CTA */}
-          <div className="flex justify-center mb-20">
-            <Button href="https://t.me/buyslashvpn_bot">Купить от 120₽ в месяц</Button>
-          </div>
+          <AnimatedContent distance={30} duration={0.75} ease="power3.out" delay={0.4} threshold={0}>
+            <div className="flex justify-center mb-20">
+              <Button href="https://t.me/buyslashvpn_bot">Купить от 120₽ в месяц</Button>
+            </div>
+          </AnimatedContent>
 
-          {/* Trust items */}
+          {/* Trust items — staggered */}
           <div className="w-full max-w-lg">
-            <div className="h-px mb-12"
-              style={{ background: 'linear-gradient(to right, transparent, rgba(100,140,255,0.20), transparent)' }} />
             <div className="grid grid-cols-3 gap-6">
-              {TRUST.map(t => <TrustItem key={t.text} icon={t.icon} text={t.text} />)}
+              {TRUST.map((t, i) => (
+                <AnimatedContent
+                  key={t.text}
+                  distance={25}
+                  duration={0.7}
+                  ease="power3.out"
+                  delay={0.5 + i * 0.1}
+                  threshold={0}
+                >
+                  <TrustItem icon={t.icon} text={t.text} />
+                </AnimatedContent>
+              ))}
             </div>
           </div>
 
-        </FadeContent>
+        </div>
       </div>
     </section>
   );

@@ -68,7 +68,7 @@ export const authLayout = {
   register: {
     backLabel:  'На главную',
     backHref:   '/',
-    footerNote: 'Нажимая «Зарегистрироваться», вы соглашаетесь с условиями.',
+    footerNote: '',
   },
   verifyEmail: {
     backLabel:  'Изменить email',

@@ -135,12 +135,12 @@ export function EmailVerificationForm({
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/[0.07] border border-white/[0.1] mb-5">
-          <Mail className="w-7 h-7 text-white" />
+        <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-5" style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.14)"}}>
+          <Mail className="w-7 h-7" style={{color:"rgba(255,255,255,0.80)"}} />
         </div>
-        <h1 className="text-2xl font-semibold text-white tracking-tight mb-1 font-wix-madefor">{title}</h1>
-        <p className="text-white/45 text-sm font-inter-tight">{subtitle}</p>
-        <p className="text-white font-medium mt-1">{email}</p>
+        <h1 className="text-3xl font-bold tracking-tight mb-2 font-wix-madefor text-white">{title}</h1>
+        <p className="text-sm font-inter-tight" style={{color:"rgba(255,255,255,0.45)"}}>{subtitle}</p>
+        <p className="font-inter-tight font-semibold mt-1" style={{color:"rgba(255,255,255,0.85)"}}>{email}</p>
       </div>
 
       {error && (
@@ -150,7 +150,7 @@ export function EmailVerificationForm({
       )}
 
       <div>
-        <label className="block text-sm font-medium text-white/80 mb-3 text-center">
+        <label className="block text-sm font-medium mb-3 text-center font-inter-tight" style={{color:"rgba(255,255,255,0.52)"}}>
           Введите 6-значный код
         </label>
         <div className="flex gap-2 justify-center">
@@ -189,14 +189,14 @@ export function EmailVerificationForm({
           type="button"
           onClick={handleResend}
           disabled={resendCooldown > 0 || resending}
-          className="text-sm text-blue-400 hover:text-blue-300 transition-colors disabled:text-white/40 disabled:cursor-not-allowed inline-flex items-center gap-2"
+          className="text-sm transition-colors duration-200 disabled:opacity-30 disabled:cursor-not-allowed inline-flex items-center gap-2 font-inter-tight hover:text-white" style={{color:"rgba(255,255,255,0.55)"}}
         >
           <RefreshCw className={`w-4 h-4 ${resending ? 'animate-spin' : ''}`} />
           {resendCooldown > 0 ? `Отправить снова через ${resendCooldown}с` : resending ? 'Отправка...' : 'Отправить код повторно'}
         </button>
 
-      <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-3">
-        <p className="text-blue-400 text-xs text-center">
+      <div className="rounded-[14px] p-3" style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.10)"}}>
+        <p className="text-xs text-center font-inter-tight" style={{color:"rgba(255,255,255,0.40)"}}>
           💡 Код действителен 15 минут. Проверьте папку &quot;Спам&quot;.
         </p>
       </div>
