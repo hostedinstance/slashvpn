@@ -55,7 +55,7 @@ function AuthNav() {
   const { navigate } = useNavigate();
 
   return (
-    <div className="relative z-30 flex justify-center py-3">
+    <div className="relative z-30 flex justify-center py-6">
       <nav
         style={{
           display: 'flex',

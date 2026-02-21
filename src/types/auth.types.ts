@@ -25,6 +25,13 @@ export interface User {
   avatar?: string;
 }
 
+// ==================== UI-КОМПОНЕНТЫ ====================
+
+export interface PasswordRequirement {
+  label: string;
+  met: boolean;
+}
+
 // ==================== ФОРМЫ ====================
 
 export interface CreateUserData {
