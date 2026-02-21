@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Plus } from 'lucide-react';
 import AnimatedContent from '@/components/AnimatedContent';
+import { faqStyles, fonts, palette } from '@/config/theme.config';
 
 export interface FAQItem {
   id:      string;
@@ -33,11 +34,6 @@ const ITEMS: FAQItem[] = [
   },
 ];
 
-const CARD_BG   = 'rgba(1,14,56,0.85)';
-const CARD_OPEN = 'rgba(1,20,74,0.9)';
-const BORDER    = 'rgba(100,140,255,0.08)';
-const BORDER_O  = 'rgba(100,140,255,0.14)';
-
 function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
   isOpen: boolean;
   onToggle: () => void;
@@ -55,9 +51,9 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
     <div
       className="relative rounded-[20px] overflow-hidden"
       style={{
-        background: isOpen ? CARD_OPEN : CARD_BG,
-        border: `1px solid ${isOpen ? BORDER_O : BORDER}`,
-        transition: 'background 0.2s ease, border-color 0.2s ease',
+        background: isOpen ? faqStyles.cardBgOpen : faqStyles.cardBg,
+        border: `1px solid ${isOpen ? faqStyles.cardBorderOpen : faqStyles.cardBorder}`,
+        transition: faqStyles.cardTransition,
       }}
     >
       <button
@@ -66,9 +62,9 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
         aria-expanded={isOpen}
       >
         <span
-          className="font-wix-madefor font-semibold text-lg md:text-xl tracking-tight"
+          className={`${fonts.heading} font-semibold text-lg md:text-xl tracking-tight`}
           style={{
-            color: isOpen ? 'rgba(230,238,255,0.96)' : 'rgba(180,205,255,0.65)',
+            color: isOpen ? faqStyles.titleColorOpen : faqStyles.titleColorClosed,
             transition: 'color 0.2s ease',
           }}
         >
@@ -77,12 +73,12 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
         <div
           className="shrink-0 size-7 rounded-full flex items-center justify-center"
           style={{
-            background: isOpen ? 'rgba(1,20,74,0.95)' : 'rgba(100,140,255,0.10)',
+            background: isOpen ? faqStyles.plusBgOpen : faqStyles.plusBgClosed,
             transform: isOpen ? 'rotate(45deg)' : 'rotate(0deg)',
             transition: 'transform 0.25s cubic-bezier(0.22,1,0.36,1), background 0.2s ease',
           }}
         >
-          <Plus size={15} strokeWidth={2} style={{ color: isOpen ? '#fff' : 'rgba(140,175,255,0.5)' }} />
+          <Plus size={15} strokeWidth={2} style={{ color: isOpen ? faqStyles.plusColorOpen : faqStyles.plusColorClosed }} />
         </div>
       </button>
 
@@ -94,8 +90,8 @@ function AccordionItem({ id, title, content, isOpen, onToggle }: FAQItem & {
         }}
       >
         <div className="px-7 md:px-8 pb-7">
-          <div className="h-px mb-5" style={{ background: 'rgba(100,140,255,0.08)' }} />
-          <p className="font-inter-tight text-base leading-relaxed max-w-2xl" style={{ color: 'rgba(180,205,255,0.50)' }}>
+          <div className="h-px mb-5" style={{ background: faqStyles.divider }} />
+          <p className={`${fonts.body} text-base leading-relaxed max-w-2xl`} style={{ color: faqStyles.bodyTextColor }}>
             {content}
           </p>
         </div>
@@ -108,8 +104,8 @@ export function FAQ() {
   const [openId, setOpenId] = useState<string>('faq-1');
 
   return (
-    <section id="faq" className="relative py-28 md:py-40" style={{ backgroundColor: '#000' }}>
-      <div className="max-w-6xl mx-auto px-6 md:px-12">
+    <section id="faq" className={`relative ${faqStyles.sectionPadding}`} style={{ backgroundColor: palette.sectionBg }}>
+      <div className={faqStyles.container}>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.6fr] gap-14 lg:gap-20 items-start">
 
           {/* Left — title, slides from left */}
@@ -122,20 +118,20 @@ export function FAQ() {
             threshold={0.2}
           >
             <div className="flex flex-col gap-5">
-              <h2 className="font-wix-madefor font-bold text-4xl md:text-5xl tracking-tight" style={{ color: 'rgba(230,238,255,0.96)' }}>
+              <h2 className={`${fonts.heading} font-bold text-4xl md:text-5xl tracking-tight`} style={{ color: faqStyles.sectionHeadingColor }}>
                 Часто задаваемые{' '}
-                <span style={{ background: 'linear-gradient(135deg,#ffffff 0%,rgba(100,160,255,0.95) 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                  вопросы
+                <span style={{ background: faqStyles.headingGradient, WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                  {faqStyles.headingGradientWord}
                 </span>
               </h2>
-              <p className="font-inter-tight text-base leading-relaxed" style={{ color: 'rgba(180,205,255,0.50)' }}>
+              <p className={`${fonts.body} text-base leading-relaxed`} style={{ color: faqStyles.subtitleColor }}>
                 Не нашёл ответа?{' '}
                 <a
                   href="https://t.me/vpnslash"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="transition-colors duration-200 hover:text-white"
-                  style={{ color: 'rgba(100,160,255,0.90)' }}
+                  style={{ color: faqStyles.linkColor }}
                 >
                   Напиши нам в Telegram
                 </a>

@@ -6,8 +6,7 @@ import TextType from '@/components/TextType';
 import { Button } from '@/components/Button';
 import { Eye, Wifi, Globe } from 'lucide-react';
 import AnimatedContent from '@/components/AnimatedContent';
-
-const ACCENT_TEXT = 'rgba(100, 160, 255, 0.90)';
+import { heroStyles, palette, fonts } from '@/config/theme.config';
 
 const TRUST = [
   { icon: Eye,   text: 'Никто не следит за тобой' },
@@ -20,11 +19,11 @@ function TrustItem({ icon: Icon, text }: { icon: typeof Eye; text: string }) {
     <div className="flex flex-col items-center gap-3">
       <div
         className="size-12 rounded-full flex items-center justify-center"
-        style={{ background: 'rgba(1,14,56,0.9)', border: '1px solid rgba(100,140,255,0.25)' }}
+        style={{ background: heroStyles.trustIconBg, border: `1px solid ${heroStyles.trustIconBorder}` }}
       >
-        <Icon size={20} strokeWidth={1.5} style={{ color: ACCENT_TEXT }} />
+        <Icon size={20} strokeWidth={1.5} style={{ color: heroStyles.trustIconColor }} />
       </div>
-      <span className="font-inter-tight text-sm text-center" style={{ color: 'rgba(200,215,255,0.55)' }}>
+      <span className={`${fonts.body} text-sm text-center`} style={{ color: heroStyles.trustTextColor }}>
         {text}
       </span>
     </div>
@@ -41,12 +40,12 @@ export const Hero = () => {
   }, []);
 
   return (
-    <section className="min-h-screen flex items-center overflow-hidden relative" style={{ backgroundColor: '#000' }}>
+    <section className="min-h-screen flex items-center overflow-hidden relative" style={{ backgroundColor: palette.sectionBg }}>
 
       {/* Prism background */}
       <div className="absolute inset-x-0 z-0" style={{ top: '-15%', bottom: '-10%' }}>
         <Prism
-          color="#4800ff" height={1.5} baseWidth={3} animationType="rotate"
+          color={heroStyles.prismColor} height={1.5} baseWidth={3} animationType="rotate"
           glow={0.6} noise={0} scale={isMobile ? 1 : 3.7}
           hoverStrength={0.5} bloom={1} timeScale={0.3} colorFrequency={0.1}
         />
@@ -54,11 +53,11 @@ export const Hero = () => {
 
       {/* Vignettes */}
       <div className="absolute top-0 inset-x-0 h-48 z-[1] pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, rgba(0,0,0,0.80), transparent)' }} />
+        style={{ background: heroStyles.vignetteTop }} />
       <div className="absolute inset-0 z-[1] pointer-events-none"
-        style={{ background: 'radial-gradient(ellipse 90% 70% at 50% 45%, transparent 25%, rgba(0,0,0,0.50) 100%)' }} />
+        style={{ background: heroStyles.vignetteRadial }} />
       <div className="absolute bottom-0 inset-x-0 h-64 z-[1] pointer-events-none"
-        style={{ background: 'linear-gradient(to top, #000 0%, rgba(0,0,0,0.85) 40%, transparent 100%)' }} />
+        style={{ background: heroStyles.vignetteBottom }} />
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-32 pb-40">
@@ -67,10 +66,10 @@ export const Hero = () => {
           {/* Badge */}
           <AnimatedContent distance={30} duration={0.7} ease="power3.out" delay={0.1} threshold={0}>
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
-              style={{ background: 'rgba(1,14,56,0.85)', border: '1px solid rgba(100,140,255,0.20)' }}>
-              <span className="size-1.5 rounded-full animate-pulse" style={{ background: ACCENT_TEXT }} />
-              <span className="font-inter-tight text-[11px] uppercase tracking-[0.12em]"
-                style={{ color: 'rgba(200,215,255,0.60)' }}>
+              style={{ background: heroStyles.badgeBg, border: `1px solid ${heroStyles.badgeBorder}` }}>
+              <span className="size-1.5 rounded-full animate-pulse" style={{ background: heroStyles.badgeDot }} />
+              <span className={`${fonts.body} text-[11px] uppercase tracking-[0.12em]`}
+                style={{ color: heroStyles.badgeTextColor }}>
                 SlashVPN — 2026
               </span>
             </div>
@@ -78,7 +77,7 @@ export const Hero = () => {
 
           {/* Heading */}
           <AnimatedContent distance={40} duration={0.85} ease="power3.out" delay={0.2} threshold={0}>
-            <h1 className="text-center text-6xl md:text-[7rem] leading-none font-grifter-bold mb-8 text-white">
+            <h1 className={`text-center text-6xl md:text-[7rem] leading-none ${fonts.hero} mb-8 text-white`}>
               <TextType
                 text={['SLASH VPN', '//slashvpn']}
                 as="span"
@@ -94,8 +93,8 @@ export const Hero = () => {
 
           {/* Subtitle */}
           <AnimatedContent distance={35} duration={0.8} ease="power3.out" delay={0.3} threshold={0}>
-            <p className="font-inter-tight text-base md:text-xl text-center max-w-xl mx-auto leading-relaxed mb-10"
-              style={{ color: 'rgba(200,215,255,0.55)' }}>
+            <p className={`${fonts.body} text-base md:text-xl text-center max-w-xl mx-auto leading-relaxed mb-10`}
+              style={{ color: heroStyles.subtitleColor }}>
               Твой надёжный доступ к любым сайтам — быстро, просто и надёжно.
             </p>
           </AnimatedContent>

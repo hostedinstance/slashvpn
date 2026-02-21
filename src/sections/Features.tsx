@@ -2,6 +2,7 @@
 
 import { Globe, Zap, ShieldOff, Smartphone, type LucideIcon } from 'lucide-react';
 import AnimatedContent from '@/components/AnimatedContent';
+import { featuresStyles, fonts, palette } from '@/config/theme.config';
 
 // ─── Данные ───────────────────────────────────────────────────────────────────
 
@@ -66,13 +67,6 @@ const FEATURES: FeatureItem[] = [
   },
 ];
 
-// ─── Палитра ──────────────────────────────────────────────────────────────────
-
-const CARD_BG    = 'rgba(1, 14, 56, 0.82)';
-const CARD_HOV   = 'rgba(1, 20, 74, 0.95)';
-const BORDER     = 'rgba(100, 140, 255, 0.09)';
-const BORDER_HOV = 'rgba(140, 170, 255, 0.22)';
-
 // ─── Card ─────────────────────────────────────────────────────────────────────
 
 function FeatureCard({
@@ -83,20 +77,20 @@ function FeatureCard({
     <div
       className="group relative rounded-[28px] overflow-hidden flex flex-col h-full"
       style={{
-        background:  CARD_BG,
-        border:      `1px solid ${BORDER}`,
-        transition:  'background 0.28s ease, border-color 0.28s ease, box-shadow 0.28s ease',
+        background:  featuresStyles.cardBg,
+        border:      `1px solid ${featuresStyles.cardBorder}`,
+        transition:  featuresStyles.cardTransition,
       }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.background   = CARD_HOV;
-        el.style.borderColor  = BORDER_HOV;
+        el.style.background   = featuresStyles.cardBgHover;
+        el.style.borderColor  = featuresStyles.cardBorderHover;
         el.style.boxShadow    = `0 0 40px -10px ${glowColor}`;
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLElement;
-        el.style.background  = CARD_BG;
-        el.style.borderColor = BORDER;
+        el.style.background  = featuresStyles.cardBg;
+        el.style.borderColor = featuresStyles.cardBorder;
         el.style.boxShadow   = 'none';
       }}
     >
@@ -119,7 +113,7 @@ function FeatureCard({
         <div className="flex items-start justify-between">
           {/* Label pill */}
           <span
-            className="font-inter-tight text-[11px] font-semibold uppercase tracking-[0.14em] px-3 py-1 rounded-full"
+            className={`${fonts.body} text-[11px] font-semibold uppercase tracking-[0.14em] px-3 py-1 rounded-full`}
             style={{
               background: `${glowColor}`,
               border:     `1px solid ${accentColor.replace('0.90', '0.20')}`,
@@ -133,7 +127,7 @@ function FeatureCard({
           <div
             className="size-11 rounded-[14px] flex items-center justify-center shrink-0"
             style={{
-              background: `rgba(1,14,56,0.95)`,
+              background: featuresStyles.iconBg,
               border:     `1px solid ${accentColor.replace('0.90', '0.22')}`,
               boxShadow:  `0 0 16px -4px ${glowColor}`,
             }}
@@ -144,12 +138,12 @@ function FeatureCard({
 
         {/* Text */}
         <div className="flex flex-col gap-2.5 flex-1">
-          <h3 className={`font-wix-madefor font-bold tracking-tight text-white ${isLarge ? 'text-3xl md:text-[2rem]' : 'text-2xl'}`}>
+          <h3 className={`${fonts.heading} font-bold tracking-tight text-white ${isLarge ? 'text-3xl md:text-[2rem]' : 'text-2xl'}`}>
             {title}
           </h3>
           <p
-            className="font-inter-tight text-[0.9rem] leading-relaxed"
-            style={{ color: 'rgba(180, 205, 255, 0.50)' }}
+            className={`${fonts.body} text-[0.9rem] leading-relaxed`}
+            style={{ color: featuresStyles.descriptionColor }}
           >
             {description}
           </p>
@@ -159,17 +153,17 @@ function FeatureCard({
         {stat && (
           <div
             className="flex items-baseline gap-2 pt-4 mt-auto"
-            style={{ borderTop: `1px solid rgba(100,140,255,0.07)` }}
+            style={{ borderTop: `1px solid ${featuresStyles.statDivider}` }}
           >
             <span
-              className="font-wix-madefor font-bold tracking-tight"
+              className={`${fonts.heading} font-bold tracking-tight`}
               style={{ fontSize: isLarge ? '2.2rem' : '1.75rem', color: accentColor }}
             >
               {stat}
             </span>
             <span
-              className="font-inter-tight text-sm"
-              style={{ color: 'rgba(180,205,255,0.38)' }}
+              className={`${fonts.body} text-sm`}
+              style={{ color: featuresStyles.statLabelColor }}
             >
               {statLabel}
             </span>
@@ -184,28 +178,28 @@ function FeatureCard({
 
 export const Features = () => {
   return (
-    <section id="features" className="relative py-28 md:py-40" style={{ backgroundColor: '#000' }}>
-      <div className="max-w-6xl mx-auto px-6 md:px-12">
+    <section id="features" className={`relative ${featuresStyles.sectionPadding}`} style={{ backgroundColor: palette.sectionBg }}>
+      <div className={featuresStyles.container}>
 
         {/* Section header */}
         <AnimatedContent distance={50} duration={0.9} ease="power3.out" threshold={0.2}>
-          <div className="flex flex-col items-center text-center gap-5 mb-16 md:mb-24">
-            <h2 className="font-wix-madefor font-bold text-5xl md:text-6xl tracking-tight text-white">
-              Всё что нужно —{' '}
+          <div className={`flex flex-col items-center text-center gap-5 ${featuresStyles.headerGap}`}>
+            <h2 className={`${fonts.heading} font-bold text-5xl md:text-6xl tracking-tight text-white`}>
+              {featuresStyles.headingText}{' '}
               <span style={{
-                background:           'linear-gradient(135deg,#ffffff 0%,rgba(100,160,255,0.95) 100%)',
+                background:           featuresStyles.headingGradient,
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor:  'transparent',
                 backgroundClip:       'text',
               }}>
-                ничего лишнего
+                {featuresStyles.headingGradientText}
               </span>
             </h2>
             <p
-              className="font-inter-tight text-lg max-w-lg leading-relaxed"
-              style={{ color: 'rgba(180,205,255,0.50)' }}
+              className={`${fonts.body} text-lg max-w-lg leading-relaxed`}
+              style={{ color: featuresStyles.subtitleColor }}
             >
-              SlashVPN создан с одной целью — дать тебе свободу в интернете без технических сложностей.
+              {featuresStyles.subtitleText}
             </p>
           </div>
         </AnimatedContent>

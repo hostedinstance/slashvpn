@@ -5,6 +5,7 @@ import Image from 'next/image';
 import logotext from '@/assets/logotext.png';
 import { useNavigate } from '@/components/NavigationTransition';
 import { UserCircle2, CreditCard, LogOut } from 'lucide-react';
+import { dashboardStyles } from '@/config/theme.config';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
@@ -42,22 +43,20 @@ function FloatingNav({
   const isPro = userPlan?.toLowerCase() === 'pro';
 
   return (
-    /* Sticky wrapper — centres the pill */
     <div
       className="sticky top-0 z-50 w-full flex justify-center"
-      style={{ padding: '16px 24px 0' }}
+      style={{ padding: dashboardStyles.navWrapperPadding }}
     >
       <nav
         className="flex items-center gap-1"
         style={{
-          height: 52,
-          padding: '0 8px',
-          borderRadius: 26,
-          background: 'rgba(0,9,43,0.92)',
-          backdropFilter: 'blur(24px) saturate(1.6)',
-          WebkitBackdropFilter: 'blur(24px) saturate(1.6)',
-          boxShadow:
-            '0 0 0 1px rgba(255,255,255,0.07), 0 8px 32px -8px rgba(0,0,0,0.6), 0 2px 8px -2px rgba(0,0,0,0.4)',
+          height:               dashboardStyles.navHeight,
+          padding:              dashboardStyles.navPadding,
+          borderRadius:         dashboardStyles.navRadius,
+          background:           dashboardStyles.navBg,
+          backdropFilter:       dashboardStyles.navBackdrop,
+          WebkitBackdropFilter: dashboardStyles.navBackdrop,
+          boxShadow:            dashboardStyles.navShadow,
         }}
       >
         {/* Logo */}
@@ -77,12 +76,7 @@ function FloatingNav({
         {/* Divider */}
         <div
           className="shrink-0"
-          style={{
-            width: 1,
-            height: 20,
-            background: 'rgba(255,255,255,0.08)',
-            marginRight: 8,
-          }}
+          style={{ width: 1, height: 20, background: dashboardStyles.divider, marginRight: 8 }}
         />
 
         {/* Nav tabs */}
@@ -94,30 +88,29 @@ function FloatingNav({
               onClick={() => onSectionChange?.(id)}
               className="flex items-center gap-2 rounded-2xl text-[13px] font-medium transition-all duration-200"
               style={{
-                /* Inter Tight для навигационных меток — чёткий, compact */
                 fontFamily: 'var(--font-inter-tight), sans-serif',
                 letterSpacing: '-0.01em',
                 padding: '7px 14px',
                 ...(active
                   ? {
-                      background: 'rgba(1,20,74,0.95)',
-                      color: 'rgba(100,160,255,0.95)',
-                      boxShadow: '0 0 0 1px rgba(100,140,255,0.30)',
+                      background: dashboardStyles.tabActiveBg,
+                      color: dashboardStyles.tabActiveColor,
+                      boxShadow: dashboardStyles.tabActiveShadow,
                     }
-                  : { color: 'rgba(255,255,255,0.38)' }),
+                  : { color: dashboardStyles.tabColor }),
               }}
               onMouseEnter={(e) => {
                 if (!active) {
                   const el = e.currentTarget as HTMLButtonElement;
-                  el.style.background = 'rgba(255,255,255,0.06)';
-                  el.style.color = 'rgba(255,255,255,0.65)';
+                  el.style.background = dashboardStyles.tabHoverBg;
+                  el.style.color = dashboardStyles.tabHoverColor;
                 }
               }}
               onMouseLeave={(e) => {
                 if (!active) {
                   const el = e.currentTarget as HTMLButtonElement;
                   el.style.background = '';
-                  el.style.color = 'rgba(255,255,255,0.38)';
+                  el.style.color = dashboardStyles.tabColor;
                 }
               }}
             >
@@ -130,12 +123,7 @@ function FloatingNav({
         {/* Divider */}
         <div
           className="shrink-0"
-          style={{
-            width: 1,
-            height: 20,
-            background: 'rgba(255,255,255,0.08)',
-            marginLeft: 8,
-          }}
+          style={{ width: 1, height: 20, background: dashboardStyles.divider, marginLeft: 8 }}
         />
 
         {/* Plan badge */}
@@ -149,8 +137,8 @@ function FloatingNav({
             borderRadius: 8,
             marginLeft: 4,
             ...(isPro
-              ? { background: 'rgba(251,191,36,0.12)', color: '#fbbf24' }
-              : { background: 'rgba(249,115,22,0.18)', color: '#fb923c', boxShadow: '0 0 10px rgba(249,115,22,0.2)' }),
+              ? { background: dashboardStyles.proBadgeBg, color: dashboardStyles.proBadgeColor }
+              : { background: dashboardStyles.freeBadgeBg, color: dashboardStyles.freeBadgeColor, boxShadow: dashboardStyles.freeBadgeShadow }),
           }}
         >
           {isPro ? '⚡ Pro' : 'Free'}
@@ -160,8 +148,8 @@ function FloatingNav({
         <div
           className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ml-1"
           style={{
-            background: 'linear-gradient(145deg, rgba(1,20,74,0.98), rgba(20,60,160,0.90))',
-            boxShadow: '0 0 10px rgba(100,140,255,0.22)',
+            background: dashboardStyles.avatarBg,
+            boxShadow: dashboardStyles.avatarShadow,
           }}
         >
           <span
@@ -180,19 +168,16 @@ function FloatingNav({
         <button
           onClick={onLogout}
           className="flex items-center rounded-xl transition-all duration-200 shrink-0 ml-0.5 mr-1"
-          style={{
-            padding: '7px 10px',
-            color: 'rgba(255,255,255,0.25)',
-          }}
+          style={{ padding: '7px 10px', color: dashboardStyles.logoutColor }}
           onMouseEnter={(e) => {
             const el = e.currentTarget as HTMLButtonElement;
-            el.style.background = 'rgba(255,255,255,0.06)';
-            el.style.color = 'rgba(255,255,255,0.55)';
+            el.style.background = dashboardStyles.logoutHoverBg;
+            el.style.color = dashboardStyles.logoutHoverColor;
           }}
           onMouseLeave={(e) => {
             const el = e.currentTarget as HTMLButtonElement;
             el.style.background = '';
-            el.style.color = 'rgba(255,255,255,0.25)';
+            el.style.color = dashboardStyles.logoutColor;
           }}
           title="Выйти"
         >
@@ -214,7 +199,7 @@ export function DashboardLayout({
   onSectionChange,
 }: DashboardLayoutProps) {
   return (
-    <div className="min-h-screen" style={{ background: '#00092B' }}>
+    <div className="min-h-screen" style={{ background: dashboardStyles.pageBg }}>
       <FloatingNav
         userName={userName}
         userPlan={userPlan}
@@ -227,8 +212,8 @@ export function DashboardLayout({
       <main
         className="mx-auto"
         style={{
-          maxWidth: 960,
-          padding: '40px 24px 80px',
+          maxWidth: dashboardStyles.contentMaxWidth,
+          padding: dashboardStyles.contentPadding,
         }}
       >
         {children}

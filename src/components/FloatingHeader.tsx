@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image, { StaticImageData } from 'next/image';
 import { useNavigate } from '@/components/NavigationTransition';
 import { header as headerConfig, site } from '@/config/site.config';
+import { headerStyles, fonts } from '@/config/theme.config';
 import { gsap } from 'gsap';
 import { Menu, X } from 'lucide-react';
 
@@ -69,7 +70,7 @@ export function FloatingHeader({
   return (
     <header
       className="sticky z-50 w-full flex justify-center"
-      style={{ top: 16, pointerEvents: 'none' }}
+      style={{ top: headerStyles.stickyTop, pointerEvents: 'none' }}
     >
       <nav
         ref={navRef}
@@ -77,16 +78,13 @@ export function FloatingHeader({
         style={{
           opacity:              0,
           pointerEvents:        'all',
-          height:               52,
-          padding:              '0 6px',
-          borderRadius:         26,
-          background:           'rgba(0,0,0,0.62)',
-          backdropFilter:       'blur(32px) saturate(1.8)',
-          WebkitBackdropFilter: 'blur(32px) saturate(1.8)',
-          boxShadow:
-            '0 0 0 1.5px rgba(255,255,255,0.22),' +
-            ' 0 8px 32px -8px rgba(0,0,0,0.70),' +
-            ' 0 2px 8px -2px rgba(0,0,0,0.40)',
+          height:               headerStyles.navHeight,
+          padding:              headerStyles.navPadding,
+          borderRadius:         headerStyles.navRadius,
+          background:           headerStyles.navBg,
+          backdropFilter:       headerStyles.navBackdrop,
+          WebkitBackdropFilter: headerStyles.navBackdrop,
+          boxShadow:            headerStyles.navShadow,
         }}
       >
         {/* ── Логотип ─────────────────────────────────────────────────── */}
@@ -113,7 +111,7 @@ export function FloatingHeader({
         {resolvedLinks.length > 0 && (
           <div
             className="shrink-0 hidden md:block"
-            style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.10)', marginRight: 4 }}
+            style={{ width: 1, height: 20, background: headerStyles.dividerBg, marginRight: 4 }}
           />
         )}
 
@@ -129,7 +127,7 @@ export function FloatingHeader({
                     fontFamily:     'var(--font-inter-tight), sans-serif',
                     fontSize:       13,
                     fontWeight:     500,
-                    color:          'rgba(255,255,255,0.48)',
+                    color:          headerStyles.linkColor,
                     padding:        '7px 13px',
                     borderRadius:   16,
                     letterSpacing:  '-0.01em',
@@ -139,13 +137,13 @@ export function FloatingHeader({
                   }}
                   onMouseEnter={(e) => {
                     const el = e.currentTarget as HTMLAnchorElement;
-                    el.style.background = 'rgba(255,255,255,0.07)';
-                    el.style.color = 'rgba(255,255,255,0.90)';
+                    el.style.background = headerStyles.linkHoverBg;
+                    el.style.color = headerStyles.linkHoverColor;
                   }}
                   onMouseLeave={(e) => {
                     const el = e.currentTarget as HTMLAnchorElement;
                     el.style.background = '';
-                    el.style.color = 'rgba(255,255,255,0.48)';
+                    el.style.color = headerStyles.linkColor;
                   }}
                 >
                   {link.label}
@@ -158,7 +156,7 @@ export function FloatingHeader({
         {/* ── Разделитель links / CTA ──────────────────────────────────── */}
         <div
           className="shrink-0 hidden md:block"
-          style={{ width: 1, height: 20, background: 'rgba(255,255,255,0.10)', marginLeft: 4 }}
+          style={{ width: 1, height: 20, background: headerStyles.dividerBg, marginLeft: 4 }}
         />
 
         {/* ── CTA кнопка ───────────────────────────────────────────────── */}
@@ -177,30 +175,21 @@ export function FloatingHeader({
             marginLeft:      6,
             marginRight:     2,
             color:           '#fff',
-            background:      'linear-gradient(135deg, rgba(80,120,255,0.90) 0%, rgba(40,80,220,0.95) 100%)',
-            boxShadow:
-              '0 0 0 1px rgba(100,140,255,0.50),' +
-              ' 0 4px 16px -2px rgba(40,80,220,0.55),' +
-              ' inset 0 1px 0 rgba(255,255,255,0.18)',
+            background:      headerStyles.ctaBg,
+            boxShadow:       headerStyles.ctaShadow,
             textDecoration:  'none',
             whiteSpace:      'nowrap',
-            transition:      'background 0.18s, box-shadow 0.18s, transform 0.12s',
+            transition:      headerStyles.ctaTransition,
           }}
           onMouseEnter={(e) => {
             const el = e.currentTarget as HTMLAnchorElement;
-            el.style.background = 'linear-gradient(135deg, rgba(100,145,255,0.95) 0%, rgba(60,105,240,1) 100%)';
-            el.style.boxShadow  =
-              '0 0 0 1px rgba(120,160,255,0.65),' +
-              ' 0 6px 22px -2px rgba(40,80,220,0.70),' +
-              ' inset 0 1px 0 rgba(255,255,255,0.22)';
+            el.style.background = headerStyles.ctaHoverBg;
+            el.style.boxShadow  = headerStyles.ctaHoverShadow;
           }}
           onMouseLeave={(e) => {
             const el = e.currentTarget as HTMLAnchorElement;
-            el.style.background = 'linear-gradient(135deg, rgba(80,120,255,0.90) 0%, rgba(40,80,220,0.95) 100%)';
-            el.style.boxShadow  =
-              '0 0 0 1px rgba(100,140,255,0.50),' +
-              ' 0 4px 16px -2px rgba(40,80,220,0.55),' +
-              ' inset 0 1px 0 rgba(255,255,255,0.18)';
+            el.style.background = headerStyles.ctaBg;
+            el.style.boxShadow  = headerStyles.ctaShadow;
             el.style.transform  = '';
           }}
           onMouseDown={(e) => {
@@ -249,12 +238,10 @@ export function FloatingHeader({
             minWidth:             220,
             padding:              '6px',
             borderRadius:         18,
-            background:           'rgba(0,0,0,0.80)',
-            backdropFilter:       'blur(32px) saturate(1.8)',
-            WebkitBackdropFilter: 'blur(32px) saturate(1.8)',
-            boxShadow:
-              '0 0 0 1px rgba(255,255,255,0.09),' +
-              ' 0 16px 40px -8px rgba(0,0,0,0.80)',
+            background:           headerStyles.mobileMenuBg,
+            backdropFilter:       headerStyles.navBackdrop,
+            WebkitBackdropFilter: headerStyles.navBackdrop,
+            boxShadow:            headerStyles.mobileMenuShadow,
             pointerEvents: 'all',
           }}
         >
@@ -267,7 +254,7 @@ export function FloatingHeader({
                 fontFamily:     'var(--font-inter-tight), sans-serif',
                 fontSize:       14,
                 fontWeight:     500,
-                color:          'rgba(255,255,255,0.58)',
+                color:          headerStyles.mobileLinkColor,
                 padding:        '10px 16px',
                 borderRadius:   12,
                 letterSpacing:  '-0.01em',
@@ -277,20 +264,20 @@ export function FloatingHeader({
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLAnchorElement;
-                el.style.background = 'rgba(255,255,255,0.07)';
-                el.style.color = 'rgba(255,255,255,0.92)';
+                el.style.background = headerStyles.mobileLinkHoverBg;
+                el.style.color = headerStyles.mobileLinkHoverColor;
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLAnchorElement;
                 el.style.background = '';
-                el.style.color = 'rgba(255,255,255,0.58)';
+                el.style.color = headerStyles.mobileLinkColor;
               }}
             >
               {link.label}
             </a>
           ))}
 
-          <div style={{ height: 1, background: 'rgba(255,255,255,0.07)', margin: '4px 0' }} />
+          <div style={{ height: 1, background: headerStyles.mobileDivider, margin: '4px 0' }} />
 
           <a
             href={isExternal || isAnchor ? resolvedCtaHref : '#'}
@@ -308,14 +295,14 @@ export function FloatingHeader({
               display:        'flex',
               alignItems:     'center',
               gap:            6,
-              background:     'linear-gradient(135deg, rgba(80,120,255,0.90) 0%, rgba(40,80,220,0.95) 100%)',
-              boxShadow:      '0 0 0 1px rgba(100,140,255,0.45), inset 0 1px 0 rgba(255,255,255,0.15)',
+              background:     headerStyles.mobileCtaBg,
+              boxShadow:      headerStyles.mobileCtaShadow,
             }}
             onMouseEnter={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = 'linear-gradient(135deg, rgba(100,145,255,0.95) 0%, rgba(60,105,240,1) 100%)';
+              (e.currentTarget as HTMLAnchorElement).style.background = headerStyles.mobileCtaHoverBg;
             }}
             onMouseLeave={(e) => {
-              (e.currentTarget as HTMLAnchorElement).style.background = 'linear-gradient(135deg, rgba(80,120,255,0.90) 0%, rgba(40,80,220,0.95) 100%)';
+              (e.currentTarget as HTMLAnchorElement).style.background = headerStyles.mobileCtaBg;
             }}
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.9, flexShrink: 0 }}>
