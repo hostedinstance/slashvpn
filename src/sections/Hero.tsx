@@ -53,11 +53,11 @@ export const Hero = () => {
 
       {/* Vignettes */}
       <div className="absolute top-0 inset-x-0 h-48 z-[1] pointer-events-none"
-        style={{ background: heroStyles.vignetteTop }} />
+           style={{ background: heroStyles.vignetteTop }} />
       <div className="absolute inset-0 z-[1] pointer-events-none"
-        style={{ background: heroStyles.vignetteRadial }} />
+           style={{ background: heroStyles.vignetteRadial }} />
       <div className="absolute bottom-0 inset-x-0 h-64 z-[1] pointer-events-none"
-        style={{ background: heroStyles.vignetteBottom }} />
+           style={{ background: heroStyles.vignetteBottom }} />
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-5xl mx-auto px-6 pt-32 pb-40">
@@ -66,10 +66,10 @@ export const Hero = () => {
           {/* Badge */}
           <AnimatedContent distance={30} duration={0.7} ease="power3.out" delay={0.1} threshold={0}>
             <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-10"
-              style={{ background: heroStyles.badgeBg, border: `1px solid ${heroStyles.badgeBorder}` }}>
+                 style={{ background: heroStyles.badgeBg, border: `1px solid ${heroStyles.badgeBorder}` }}>
               <span className="size-1.5 rounded-full animate-pulse" style={{ background: heroStyles.badgeDot }} />
               <span className={`${fonts.body} text-[11px] uppercase tracking-[0.12em]`}
-                style={{ color: heroStyles.badgeTextColor }}>
+                    style={{ color: heroStyles.badgeTextColor }}>
                 SlashVPN — 2026
               </span>
             </div>
@@ -77,7 +77,10 @@ export const Hero = () => {
 
           {/* Heading */}
           <AnimatedContent distance={40} duration={0.85} ease="power3.out" delay={0.2} threshold={0}>
-            <h1 className={`text-center text-6xl md:text-[7rem] leading-none ${fonts.hero} mb-8 text-white`}>
+            <h1
+              className={`text-center leading-none ${fonts.hero} mb-8 text-white whitespace-nowrap`}
+              style={{ fontSize: 'clamp(2.4rem, 10.5vw, 7rem)' }}
+            >
               <TextType
                 text={['SLASH VPN', '//slashvpn']}
                 as="span"
@@ -94,7 +97,7 @@ export const Hero = () => {
           {/* Subtitle */}
           <AnimatedContent distance={35} duration={0.8} ease="power3.out" delay={0.3} threshold={0}>
             <p className={`${fonts.body} text-base md:text-xl text-center max-w-xl mx-auto leading-relaxed mb-10`}
-              style={{ color: heroStyles.subtitleColor }}>
+               style={{ color: heroStyles.subtitleColor }}>
               Твой надёжный доступ к любым сайтам — быстро, просто и надёжно.
             </p>
           </AnimatedContent>

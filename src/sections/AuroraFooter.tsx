@@ -69,7 +69,7 @@ void main(){
   fragColor     = vec4(color * intensity, intensity);
 }`;
 
-    const renderer = new Renderer({ alpha: true, antialias: true });
+    const renderer = new Renderer({ alpha: true, antialias: false });
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 0);
     gl.enable(gl.BLEND);
