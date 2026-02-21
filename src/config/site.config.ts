@@ -11,7 +11,7 @@ export const site = {
   ctaLabel: 'Войти',
   ctaHref: '/login',
   navLinks: [
-    { label: 'Преимущества', href: '#features'  },
+    { label: 'кек', href: '#features'  },
     { label: 'Локации',      href: '#locations' },
     { label: 'FAQ',          href: '#faq'       },
   ],
